@@ -60,10 +60,10 @@
     /* ── HERO ── */
     #hero {
       position: relative;
-      min-height: 82vh;
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
+      justify-content: flex-end;
       overflow: hidden;
       border-bottom: 1px solid var(--rule);
     }
@@ -74,12 +74,18 @@
       height: 100%;
       pointer-events: none;
     }
+    /* Spacer that reserves the animation zone at the top */
+    .hero-anim-space {
+      flex: 1;
+      min-height: 44vh;
+    }
     .hero-inner {
       position: relative;
       z-index: 1;
       width: 100%;
       max-width: 1100px;
-      padding: 7rem 7% 5rem;
+      align-self: center;
+      padding: 0 7% 5rem;
     }
 
     /* Logo + headline side by side */
@@ -342,7 +348,7 @@
       .thrust-img { min-height: 200px; }
       nav { padding: 0.9rem 5%; gap: 1.5rem; }
       section { padding: 3.5rem 5%; }
-      .hero-inner { padding: 6rem 5% 4rem; }
+      .hero-inner { padding: 0 5% 4rem; }
     }
   </style>
 </head>
@@ -360,6 +366,7 @@
   <!-- HERO -->
   <div id="hero">
     <canvas id="particle-canvas"></canvas>
+    <div class="hero-anim-space"></div>
     <div class="hero-inner">
 
       <div class="hero-top">
@@ -494,212 +501,110 @@
 
 
   <script>
-  /* ── FLOW AROUND A DEFORMING PARTICLE ──────────────────────────────────
-     Potential flow streamlines bend around a soft elliptical particle.
-     The particle breathes (aspect ratio oscillates) under shear.
-     Small EV-like satellites drift along streamlines near the surface.
-  ──────────────────────────────────────────────────────────────────────── */
+  /* ── FLOW AROUND A DEFORMING PARTICLE ── */
   (function() {
     var canvas = document.getElementById('particle-canvas');
     var ctx    = canvas.getContext('2d');
-    var W, H;
+    var W, H, t = 0;
+    var TEAL = [26, 92, 69];
+    var N_LINES = 30, N_EVS = 12, evs = [];
 
-    var TEAL    = [26, 92, 69];
-    var BG      = [247, 246, 242];
-    var t       = 0;
-
-    /* ── Particle (ellipse) state ── */
-    var particle = {
-      ax: 1.0,   // current semi-axis x (normalised)
-      ay: 1.0,   // current semi-axis y
-      base: 1.0, // base radius in pixels, set on resize
-      phase: 0   // breathing phase
-    };
-
-    /* ── Streamlines: seed points on left edge, integrate rightward ── */
-    var N_LINES  = 28;
-    var N_STEPS  = 280;
-    var DT       = 3.5;
-
-    /* ── EV satellites ── */
-    var N_EVS = 14;
-    var evs   = [];
+    function rgba(c, a) { return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
 
     function resize() {
       var hero = document.getElementById('hero');
       W = canvas.width  = hero.offsetWidth;
       H = canvas.height = hero.offsetHeight;
-      particle.base = Math.min(W, H) * 0.13;
-      // Re-seed EVs on resize
       initEVs();
     }
 
     function initEVs() {
       evs = [];
       for (var i = 0; i < N_EVS; i++) {
-        var angle = (i / N_EVS) * Math.PI * 2;
-        var r     = 1.6 + Math.random() * 1.2; // orbit radius factor
         evs.push({
-          angle:  angle,
-          r:      r,
-          speed:  (0.003 + Math.random() * 0.004) * (Math.random() < 0.5 ? 1 : -1),
-          size:   1.5 + Math.random() * 2.0,
-          alpha:  0.35 + Math.random() * 0.35
+          angle: (i / N_EVS) * Math.PI * 2,
+          r:     1.55 + Math.random() * 1.1,
+          speed: (0.003 + Math.random() * 0.004) * (Math.random() < 0.5 ? 1 : -1),
+          size:  1.6 + Math.random() * 2.2,
+          alpha: 0.3 + Math.random() * 0.35
         });
       }
     }
 
-    /* ── Potential flow velocity around an ellipse ──
-       Using conformal mapping approximation:
-       u = U∞(1 - a²(x²-y²)/(x²+y²)²)
-       v = -U∞ · 2a²·x·y/(x²+y²)²
-       where a,b are semi-axes, coords relative to particle center
-    ── */
-    function flowVelocity(px, py, cx, cy, ax, ay) {
-      var dx = px - cx;
-      var dy = py - cy;
-      var U  = 1.0;  // free stream
-
-      // Scale into unit-ellipse coordinates
-      var r2 = dx*dx + dy*dy;
-      if (r2 < 0.01) return { u: 0, v: 0 };
-
-      var a2 = ax * ax;
-      var r4 = r2 * r2;
-
-      var u = U * (1 - a2 * (dx*dx - dy*dy) / r4);
-      var v = U * (-a2 * 2 * dx * dy / r4);
-
-      return { u: u, v: v };
+    function flowVel(px, py, cx, cy, ax) {
+      var dx = px-cx, dy = py-cy, r2 = dx*dx+dy*dy;
+      if (r2 < 1) return { u:1, v:0 };
+      var a2=ax*ax, r4=r2*r2;
+      return { u: 1-(a2*(dx*dx-dy*dy)/r4), v: -(a2*2*dx*dy/r4) };
     }
-
-    function isInsideParticle(px, py, cx, cy, ax, ay) {
-      var dx = (px - cx) / ax;
-      var dy = (py - cy) / ay;
-      return dx*dx + dy*dy < 1.02;
-    }
-
-    function rgba(rgb, a) {
-      return 'rgba(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ',' + a + ')';
+    function inside(px, py, cx, cy, ax, ay) {
+      var dx=(px-cx)/ax, dy=(py-cy)/ay; return dx*dx+dy*dy<1.04;
     }
 
     function drawFrame() {
-      t += 0.012;
+      t += 0.011;
       ctx.clearRect(0, 0, W, H);
 
-      var cx = W * 0.44;
-      var cy = H * 0.50;
-      var base = particle.base;
+      /* Particle: horizontally centered, vertically in the upper animation zone */
+      var cx   = W * 0.50;
+      var cy   = H * 0.30;
+      var base = Math.min(W, H) * 0.11;
+      var breathe = Math.sin(t * 0.55);
+      var ax = base * (1.0 + 0.20 * breathe);
+      var ay = base * (1.0 - 0.13 * breathe);
 
-      /* Breathing: slow sinusoidal stretch */
-      var breathe  = Math.sin(t * 0.55);
-      var ax = base * (1.0 + 0.22 * breathe);   // stretches horizontally
-      var ay = base * (1.0 - 0.14 * breathe);   // compresses vertically
+      /* ── Streamlines — steps scale with width so they always reach the edge ── */
+      var DT      = 4.0;
+      var N_STEPS = Math.ceil(W / DT) + 80;
+      var ySpread = H * 0.92;
 
-      /* ── Draw streamlines ── */
-      var ySpread = H * 0.82;
       for (var l = 0; l < N_LINES; l++) {
-        var yStart = (H - ySpread) / 2 + (l / (N_LINES - 1)) * ySpread;
-        var px = 0;
-        var py = yStart;
-
+        var yStart = (H - ySpread) / 2 + (l / (N_LINES-1)) * ySpread;
+        var px = -DT, py = yStart;
         ctx.beginPath();
         ctx.moveTo(px, py);
-
-        var inside = false;
         for (var s = 0; s < N_STEPS; s++) {
-          var vel = flowVelocity(px, py, cx, cy, ax * 1.05, ay * 1.05);
-
-          // Nudge streamlines apart when approaching — adds organic feel
-          var distToCx = Math.abs(px - cx);
-          var inZone   = distToCx < ax * 2.5 && Math.abs(py - cy) < ay * 3;
-          var stepLen  = inZone ? DT * 0.7 : DT;
-
-          var nx = px + vel.u * stepLen;
-          var ny = py + vel.v * stepLen;
-
-          if (isInsideParticle(nx, ny, cx, cy, ax, ay)) {
-            inside = true;
-            break;
-          }
-
+          var v    = flowVel(px, py, cx, cy, ax * 1.04, ay * 1.04);
+          var zone = Math.abs(px-cx) < ax*3 && Math.abs(py-cy) < ay*4;
+          var step = zone ? DT*0.65 : DT;
+          var nx = px + v.u*step, ny = py + v.v*step;
+          if (inside(nx, ny, cx, cy, ax, ay)) break;
           ctx.lineTo(nx, ny);
           px = nx; py = ny;
-
-          if (px > W + 10) break;
+          if (px > W + DT) break;
         }
-
-        /* Line style: lines near center more visible */
-        var distFromCenter = Math.abs(yStart - cy);
-        var closeness = Math.max(0, 1 - distFromCenter / (H * 0.42));
-        var alpha = 0.07 + closeness * 0.11;
-
-        ctx.strokeStyle = rgba(TEAL, alpha);
-        ctx.lineWidth   = 0.8 + closeness * 0.6;
+        var distY = Math.abs(yStart - cy);
+        var close = Math.max(0, 1 - distY / (H * 0.38));
+        ctx.strokeStyle = rgba(TEAL, 0.055 + close * 0.13);
+        ctx.lineWidth   = 0.7 + close * 0.7;
         ctx.stroke();
       }
 
-      /* ── Draw particle glow ── */
-      var grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, ax * 1.6);
-      grad.addColorStop(0,   rgba(TEAL, 0.07));
-      grad.addColorStop(0.5, rgba(TEAL, 0.04));
-      grad.addColorStop(1,   rgba(TEAL, 0));
+      /* ── Particle glow ── */
+      var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, ax*1.7);
+      grd.addColorStop(0,   rgba(TEAL, 0.08));
+      grd.addColorStop(0.6, rgba(TEAL, 0.03));
+      grd.addColorStop(1,   rgba(TEAL, 0));
       ctx.beginPath();
-      ctx.ellipse(cx, cy, ax * 1.6, ay * 1.6, 0, 0, Math.PI * 2);
-      ctx.fillStyle = grad;
-      ctx.fill();
+      ctx.ellipse(cx, cy, ax*1.7, ay*1.7, 0, 0, Math.PI*2);
+      ctx.fillStyle = grd; ctx.fill();
 
-      /* ── Draw particle body ── */
+      /* ── Particle body ── */
       ctx.beginPath();
-      ctx.ellipse(cx, cy, ax, ay, 0, 0, Math.PI * 2);
-      ctx.strokeStyle = rgba(TEAL, 0.35);
-      ctx.lineWidth   = 1.5;
+      ctx.ellipse(cx, cy, ax, ay, 0, 0, Math.PI*2);
+      ctx.strokeStyle = rgba(TEAL, 0.38);
+      ctx.lineWidth   = 1.6;
       ctx.stroke();
-      ctx.fillStyle   = rgba(TEAL, 0.04);
-      ctx.fill();
+      ctx.fillStyle = rgba(TEAL, 0.045); ctx.fill();
 
-      /* ── Draw internal structure (simplified molecular network) ── */
-      var nNodes = 7;
-      var nodes  = [];
-      for (var n = 0; n < nNodes; n++) {
-        var a  = (n / nNodes) * Math.PI * 2 + t * 0.08;
-        var nr = (n % 2 === 0 ? 0.55 : 0.30);
-        nodes.push({
-          x: cx + Math.cos(a) * ax * nr,
-          y: cy + Math.sin(a) * ay * nr
-        });
-      }
-      // Connect nodes
-      for (var i = 0; i < nodes.length; i++) {
-        for (var j = i + 1; j < nodes.length; j++) {
-          var dx = nodes[i].x - nodes[j].x;
-          var dy = nodes[i].y - nodes[j].y;
-          var d  = Math.sqrt(dx*dx + dy*dy);
-          if (d < ax * 0.85) {
-            ctx.beginPath();
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.strokeStyle = rgba(TEAL, 0.18);
-            ctx.lineWidth   = 0.8;
-            ctx.stroke();
-          }
-        }
-      }
-      for (var n = 0; n < nodes.length; n++) {
-        ctx.beginPath();
-        ctx.arc(nodes[n].x, nodes[n].y, 2.2, 0, Math.PI * 2);
-        ctx.fillStyle = rgba(TEAL, 0.4);
-        ctx.fill();
-      }
-
-      /* ── Draw EV satellites ── */
+      /* ── EV satellites ── */
       for (var e = 0; e < evs.length; e++) {
-        var ev   = evs[e];
+        var ev = evs[e];
         ev.angle += ev.speed;
-        var ex   = cx + Math.cos(ev.angle) * ax * ev.r;
-        var ey   = cy + Math.sin(ev.angle) * ay * ev.r * 0.72;
+        var ex = cx + Math.cos(ev.angle) * ax * ev.r;
+        var ey = cy + Math.sin(ev.angle) * ay * ev.r * 0.70;
         ctx.beginPath();
-        ctx.arc(ex, ey, ev.size, 0, Math.PI * 2);
+        ctx.arc(ex, ey, ev.size, 0, Math.PI*2);
         ctx.fillStyle = rgba(TEAL, ev.alpha);
         ctx.fill();
       }

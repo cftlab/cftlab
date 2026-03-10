@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>People — CFT Lab</title>
+  <meta name="description" content="People of the Complex Flows and Advanced Transport Lab at Cleveland State University." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Gugi&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f7f6f2;
+      --teal:   #1a5c45;
+      --dark:   #1a1a18;
+      --mid:    #50504a;
+      --dim:    #8a8a84;
+      --orange: rgb(240,90,41);
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(26,92,69,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 7%;
+      height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--teal); text-decoration: none; transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.55; }
+    nav a.active { color: var(--orange); }
+    nav a.dim { color: var(--dim); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 7% 4rem;
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .page-header .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 3.2vw, 3.4rem); font-weight: 300;
+      line-height: 1.15; color: var(--dark);
+    }
+    .page-header h1 em { font-style: italic; color: var(--teal); }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 7%; }
+    section:nth-child(even) { background: #f0efe9; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 300;
+      color: var(--dark); margin-bottom: 2.8rem; line-height: 1.2;
+      border-bottom: 1px solid var(--rule); padding-bottom: 0.9rem;
+    }
+    .section-title em { font-style: italic; color: var(--teal); }
+
+    /* ── PI CARD ── */
+    .pi-card {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 3rem; align-items: start;
+      background: #fff;
+      border: 1px solid rgba(26,92,69,0.15);
+      border-top: 3px solid var(--teal);
+      padding: 2.4rem;
+      opacity: 0; transform: translateY(22px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .pi-card.visible { opacity: 1; transform: translateY(0); }
+
+    .avatar {
+      display: flex; flex-direction: column; align-items: center; gap: 1rem;
+    }
+    .avatar-circle {
+      width: 160px; height: 160px; border-radius: 50%;
+      background: #e8e7e1;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid rgba(26,92,69,0.15);
+      overflow: hidden;
+    }
+    .avatar-circle img { width: 100%; height: 100%; object-fit: cover; }
+    .avatar-initials {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem; font-weight: 300; color: var(--teal);
+      letter-spacing: 0.05em;
+    }
+    .avatar-links {
+      display: flex; gap: 0.9rem;
+    }
+    .avatar-links a {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--teal); text-decoration: none;
+      border-bottom: 1px solid rgba(26,92,69,0.25);
+      padding-bottom: 1px; transition: opacity 0.2s;
+    }
+    .avatar-links a:hover { opacity: 0.55; }
+
+    .pi-info {}
+    .pi-role {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 0.35rem;
+    }
+    .pi-name {
+      font-size: clamp(1.6rem, 2vw, 2.1rem); font-weight: 400;
+      color: var(--dark); margin-bottom: 0.25rem; line-height: 1.1;
+    }
+    .pi-title {
+      font-size: 1.05rem; color: var(--dim); margin-bottom: 1.4rem;
+      font-style: italic;
+    }
+    .pi-bio {
+      font-size: 1.18rem; font-weight: 400; color: var(--mid);
+      line-height: 1.85;
+    }
+
+    /* ── STUDENT GRID ── */
+    .student-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.4rem;
+    }
+    .student-card {
+      background: #fff;
+      border: 1px solid rgba(26,92,69,0.12);
+      border-top: 2px solid var(--teal);
+      padding: 1.8rem 1.6rem 1.6rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 0.9rem;
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .student-card.visible { opacity: 1; transform: translateY(0); }
+    .student-card:hover { border-color: rgba(26,92,69,0.35); }
+
+    .student-avatar {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: #e8e7e1;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid rgba(26,92,69,0.15);
+      flex-shrink: 0;
+    }
+    .student-initials {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem; font-weight: 300; color: var(--teal);
+    }
+    .student-name {
+      font-size: 1.2rem; font-weight: 400; color: var(--dark);
+      line-height: 1.2;
+    }
+    .student-degree {
+      font-family: 'DM Mono', monospace; font-size: 0.63rem;
+      letter-spacing: 0.15em; text-transform: uppercase;
+      color: var(--orange);
+    }
+    .student-project {
+      font-size: 1.0rem; font-weight: 400; color: var(--mid);
+      line-height: 1.6; font-style: italic;
+    }
+    .student-thrust {
+      font-family: 'DM Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--dim); margin-top: auto;
+      border-top: 1px solid var(--rule); padding-top: 0.6rem;
+      width: 100%; text-align: center;
+    }
+
+    /* ── HIGH SCHOOL / ALUMNI LISTS ── */
+    .people-list {
+      display: flex; flex-direction: column; gap: 0;
+    }
+    .people-row {
+      display: grid; grid-template-columns: 1fr 120px 1fr;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid rgba(26,92,69,0.09);
+      align-items: baseline;
+      opacity: 0; transform: translateX(-12px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .people-row.visible { opacity: 1; transform: translateX(0); }
+    .people-name { font-size: 1.1rem; font-weight: 400; color: var(--dark); }
+    .people-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--teal); text-align: center;
+    }
+    .people-note {
+      font-size: 1.0rem; font-weight: 400; color: var(--mid);
+      font-style: italic; text-align: right;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-csu a { display: block; text-decoration: none; }
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
+    }
+    .footer-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.18); }
+    .footer-dept { text-align: center; flex: 1; }
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.13em; text-transform: uppercase; line-height: 1.8;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+    }
+    .footer-dept a:hover { color: rgba(255,255,255,0.85); }
+    .footer-group a { display: block; text-decoration: none; }
+    .footer-group img { height: 40px; width: auto; opacity: 0.85; }
+    .footer-group img:hover { opacity: 1; }
+
+    /* ── REVEAL ── */
+    [data-reveal] { opacity: 0; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .pi-card { grid-template-columns: 1fr; }
+      .avatar { flex-direction: row; align-items: center; }
+      .avatar-circle { width: 80px; height: 80px; flex-shrink: 0; }
+      .people-row { grid-template-columns: 1fr 90px; }
+      .people-note { display: none; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
+    <a href="index.html#research">Research</a>
+    <a href="people.html" class="active">People</a>
+    <a href="publications.html" class="dim">Publications</a>
+    <a href="join.html" class="dim">Join</a>
+  </div>
+</nav>
+
+<div style="padding-top:54px; border-bottom:1px solid var(--rule);">
+  <div class="page-header">
+    <p class="section-label">The Lab</p>
+    <h1>People who do the <em>work.</em></h1>
+  </div>
+</div>
+
+<!-- ── PRINCIPAL INVESTIGATOR ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Principal Investigator</p>
+    <h2 class="section-title">Faculty</h2>
+    <div class="pi-card" data-reveal>
+      <div class="avatar">
+        <div class="avatar-circle">
+          <img src="mustafa.jpg" alt="Mustafa Usta" />
+        </div>
+        <div class="avatar-links">
+          <a href="mailto:m.usta@csuohio.edu">Email</a>
+          <a href="#" target="_blank">CV</a>
+          <a href="https://scholar.google.com" target="_blank">Scholar</a>
+        </div>
+      </div>
+      <div class="pi-info">
+        <p class="pi-role">Principal Investigator</p>
+        <h2 class="pi-name">Mustafa Usta, Ph.D.</h2>
+        <p class="pi-title">Assistant Professor of Mechanical Engineering &mdash; Cleveland State University</p>
+        <p class="pi-bio">
+          Dr. Usta earned his B.S. from Yildiz Technical University (Turkey, 2012) and
+          his M.S. and Ph.D. from Lehigh University (2016, 2018), all in mechanical engineering.
+          He was previously a Postdoctoral Fellow and Research Faculty in Mechanical Engineering
+          at Georgia Institute of Technology before joining Cleveland State University as an
+          Assistant Professor in 2022. He has been an Affiliate Faculty in the Departments of
+          Chemical and Biomedical Engineering since 2023.
+        </p>
+        <p class="pi-bio" style="margin-top:1rem;">
+          Dr. Usta directs the Complex Flows and Advanced Transport Lab. His research focuses on
+          transport in flow-responsive systems &mdash; where classical models fail because
+          boundaries, material properties, or particles actively respond to the flow &mdash;
+          spanning biological flows, membrane separation, and reactive surfaces. His work is
+          supported by the Department of Energy and draws on collaborators across biomedical
+          engineering, materials science, national laboratories, and industry partners.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CURRENT STUDENTS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Current Members</p>
+    <h2 class="section-title">Graduate <em>Students.</em></h2>
+    <div class="student-grid">
+
+      <div class="student-card" data-reveal style="transition-delay:0.00s;">
+        <div class="student-avatar"><span class="student-initials">SC</span></div>
+        <div>
+          <p class="student-degree">Ph.D. Student</p>
+          <p class="student-name">Sruthi Chengalrayan</p>
+        </div>
+        <p class="student-project">vWF &ndash; extracellular vesicle interactions under hemodynamic conditions</p>
+        <p class="student-thrust">Thrust I &mdash; Bioflow &amp; Hemodynamics</p>
+      </div>
+
+      <div class="student-card" data-reveal style="transition-delay:0.08s;">
+        <div class="student-avatar"><img src="saugat.jpg" alt="Saugat Upreti" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" /></div>
+        <div>
+          <p class="student-degree">Ph.D. Student</p>
+          <p class="student-name">Saugat Upreti</p>
+        </div>
+        <p class="student-project">Data-driven models for flow-history-dependent vWF activation</p>
+        <p class="student-thrust">Thrust I &mdash; Bioflow &amp; Hemodynamics</p>
+      </div>
+
+      <div class="student-card" data-reveal style="transition-delay:0.16s;">
+        <div class="student-avatar"><span class="student-initials">MS</span></div>
+        <div>
+          <p class="student-degree">Ph.D. Student</p>
+          <p class="student-name">Mertcan Samgar</p>
+        </div>
+        <p class="student-project">Flow-physics-driven separation in centrifugal reverse osmosis systems</p>
+        <p class="student-thrust">Thrust II &mdash; Flow-Coupled Functional Surfaces</p>
+      </div>
+
+      <div class="student-card" data-reveal style="transition-delay:0.24s;">
+        <div class="student-avatar"><span class="student-initials">MV</span></div>
+        <div>
+          <p class="student-degree">M.S. Student</p>
+          <p class="student-name">Marijo Vukancic</p>
+        </div>
+        <p class="student-project">Viscosity-gradient effects in compressible jet mixing flows</p>
+        <p class="student-thrust">Shared Foundation &mdash; Variable-Property Turbulence</p>
+      </div>
+
+      <div class="student-card" data-reveal style="transition-delay:0.32s;">
+        <div class="student-avatar"><span class="student-initials">SUA</span></div>
+        <div>
+          <p class="student-degree">M.S. Student</p>
+          <p class="student-name">Syed Umair Ahmed</p>
+        </div>
+        <p class="student-project">Red blood cell and cellular deformation in shear and extensional flows</p>
+        <p class="student-thrust">Thrust I &mdash; Bioflow &amp; Hemodynamics</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── UNDERGRADUATE RESEARCHERS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Current Members</p>
+    <h2 class="section-title">Undergraduate <em>Researchers.</em></h2>
+    <div class="people-list">
+      <div class="people-row" data-reveal>
+        <span class="people-name">Alan Fernandez</span>
+        <span class="people-badge">Past</span>
+        <span class="people-note">Undergraduate Researcher</span>
+      </div>
+      <div class="people-row" data-reveal style="transition-delay:0.07s;">
+        <span class="people-name">Hannah Ferguson</span>
+        <span class="people-badge">Past</span>
+        <span class="people-note">Undergraduate Researcher</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── HIGH SCHOOL RESEARCHERS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Research Interns</p>
+    <h2 class="section-title">High School <em>Researchers.</em></h2>
+    <p style="font-size:1.1rem; color:var(--mid); margin-bottom:2rem; max-width:680px; font-style:italic;">
+      The lab welcomes high school students for research internships. Current and past participants are listed below.
+    </p>
+    <div class="people-list">
+      <!-- Add rows as needed. Example: -->
+      <div class="people-row" data-reveal>
+        <span class="people-name">Chengyu Peng</span>
+        <span class="people-badge">Active</span>
+        <span class="people-note">Solon High School</span>
+      </div>
+      <div class="people-row" data-reveal style="transition-delay:0.07s;">
+        <span class="people-name">Nicolas Shang</span>
+        <span class="people-badge">Past</span>
+        <span class="people-note">Hawken School</span>
+      </div>
+      <div class="people-row" data-reveal style="transition-delay:0.14s;">
+        <span class="people-name">Yixin Zhou</span>
+        <span class="people-badge">Past</span>
+        <span class="people-note">Hawken School</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ALUMNI ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Alumni</p>
+    <h2 class="section-title">Past <em>Members.</em></h2>
+    <div class="people-list">
+      <!-- Add rows as needed. Format: name | degree+year | where they went -->
+      <div class="people-row" data-reveal>
+        <span class="people-name">— </span>
+        <span class="people-badge">—</span>
+        <span class="people-note">—</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var els = document.querySelectorAll('[data-reveal]');
+  var io  = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  },{threshold:0.1});
+  els.forEach(function(el){ io.observe(el); });
+})();
+</script>
+
+</body>
+</html>

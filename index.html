@@ -12,13 +12,12 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #f7f6f2;
-      --teal:    #1a5c45;
-      --dark:    #1a1a18;
-      --mid:     #50504a;
-      --dim:     #8a8a84;
-      --rule:    rgba(26,92,69,0.12);
-      --pad:     6%;
+      --bg:   #f7f6f2;
+      --teal: #1a5c45;
+      --dark: #1a1a18;
+      --mid:  #50504a;
+      --dim:  #8a8a84;
+      --rule: rgba(26,92,69,0.12);
     }
 
     html { scroll-behavior: smooth; }
@@ -37,10 +36,10 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 100;
-      background: rgba(247,246,242,0.92);
-      backdrop-filter: blur(8px);
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--rule);
-      padding: 0.9rem var(--pad);
+      padding: 0.9rem 7%;
       display: flex;
       gap: 2.5rem;
       align-items: center;
@@ -54,17 +53,18 @@
       text-decoration: none;
       transition: opacity 0.2s;
     }
-    nav a:hover { opacity: 0.6; }
+    nav a:hover { opacity: 0.55; }
     nav a.dim { color: var(--dim); }
 
     /* ── HERO ── */
     #hero {
       position: relative;
-      min-height: 100vh;
+      min-height: 82vh;
       display: flex;
       align-items: center;
-      padding: 7rem var(--pad) 4rem;
+      justify-content: center;
       overflow: hidden;
+      border-bottom: 1px solid var(--rule);
     }
     #hero canvas {
       position: absolute;
@@ -76,29 +76,35 @@
     .hero-inner {
       position: relative;
       z-index: 1;
-      max-width: 900px;
+      width: 100%;
+      max-width: 1100px;
+      padding: 7rem 7% 5rem;
     }
+
+    /* Logo + headline side by side */
     .hero-top {
-      display: flex;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 3.5rem;
       align-items: center;
-      gap: 2.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 2.2rem;
     }
     .hero-top img {
-      width: 160px;
+      width: 220px;
       height: auto;
-      flex-shrink: 0;
     }
     .hero-top h1 {
-      font-size: clamp(2rem, 4vw, 3.6rem);
+      font-size: clamp(2.2rem, 3.2vw, 3.8rem);
       font-weight: 300;
-      line-height: 1.15;
+      line-height: 1.18;
       color: var(--dark);
+      letter-spacing: -0.01em;
     }
     .hero-top h1 em {
       font-style: italic;
       color: var(--teal);
     }
+
     .rule {
       width: 44px;
       height: 2px;
@@ -106,23 +112,29 @@
       margin: 0 0 1.6rem;
     }
     .hero-body {
-      font-size: 1.05rem;
+      font-size: 1.2rem;
       color: var(--mid);
-      max-width: 680px;
-      line-height: 1.9;
-      margin-bottom: 1.4rem;
+      max-width: 780px;
+      line-height: 1.85;
+      margin-bottom: 1.2rem;
     }
     .hero-caps {
       font-style: italic;
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       color: var(--teal);
-      max-width: 600px;
+      max-width: 680px;
     }
 
     /* ── SECTIONS ── */
-    section { padding: 5rem var(--pad); }
+    section {
+      padding: 5rem 7%;
+    }
     section:nth-child(even) { background: #f0efe9; }
 
+    .section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
     .section-label {
       font-family: 'DM Mono', monospace;
       font-size: 0.68rem;
@@ -132,10 +144,11 @@
       margin-bottom: 0.5rem;
     }
     .section-title {
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-size: clamp(1.8rem, 2.8vw, 2.8rem);
       font-weight: 300;
       color: var(--dark);
-      margin-bottom: 2.5rem;
+      margin-bottom: 2.8rem;
+      line-height: 1.2;
     }
     .section-title em { font-style: italic; color: var(--teal); }
 
@@ -148,15 +161,25 @@
       background: #fff;
       margin-bottom: 1.5rem;
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
     }
-    .thrust-row.visible {
-      opacity: 1;
-      transform: translateY(0);
+    .thrust-row.visible { opacity: 1; transform: translateY(0); }
+
+    .foundation-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(26,92,69,0.2);
+      border-left: 3px solid var(--teal);
+      background: #fff;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease 0.15s, transform 0.65s ease 0.15s;
     }
+    .foundation-row.visible { opacity: 1; transform: translateY(0); }
+
     .thrust-text {
-      padding: 2.2rem;
+      padding: 2.4rem 2.6rem;
       border-right: 1px solid rgba(26,92,69,0.1);
     }
     .thrust-label {
@@ -168,14 +191,14 @@
       margin-bottom: 0.6rem;
     }
     .thrust-title {
-      font-size: 1.25rem;
+      font-size: 1.35rem;
       font-weight: 400;
       color: var(--dark);
       margin-bottom: 1rem;
       line-height: 1.3;
     }
     .thrust-body {
-      font-size: 0.97rem;
+      font-size: 1.05rem;
       color: var(--mid);
       line-height: 1.85;
     }
@@ -184,7 +207,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 220px;
+      min-height: 240px;
       font-family: 'DM Mono', monospace;
       font-size: 0.65rem;
       letter-spacing: 0.12em;
@@ -198,64 +221,47 @@
       display: block;
     }
 
-    /* Shared foundation — left border variant */
-    .foundation-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid rgba(26,92,69,0.2);
-      border-left: 3px solid var(--teal);
-      background: #fff;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
-    }
-    .foundation-row.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     .more-link {
       display: block;
       text-align: right;
-      margin-top: 1.8rem;
+      margin-top: 2rem;
       font-family: 'DM Mono', monospace;
       font-size: 0.72rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--teal);
       text-decoration: none;
+      transition: opacity 0.2s;
     }
-    .more-link:hover { opacity: 0.6; }
+    .more-link:hover { opacity: 0.55; }
 
     /* ── NEWS ── */
     .news-row {
       display: grid;
-      grid-template-columns: 110px 1fr;
-      gap: 1.2rem;
-      padding: 1.1rem 0;
+      grid-template-columns: 120px 1fr;
+      gap: 1.5rem;
+      padding: 1.2rem 0;
       border-bottom: 1px solid rgba(26,92,69,0.1);
       align-items: baseline;
       opacity: 0;
-      transform: translateX(-12px);
+      transform: translateX(-14px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
-    .news-row.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
+    .news-row.visible { opacity: 1; transform: translateX(0); }
     .news-date {
       font-family: 'DM Mono', monospace;
       font-size: 0.7rem;
       color: var(--teal);
+      padding-top: 0.1rem;
     }
-    .news-text { font-size: 0.97rem; color: #3a3a35; }
+    .news-text { font-size: 1.05rem; color: #3a3a35; line-height: 1.7; }
     .news-text strong { font-weight: 600; color: var(--dark); }
 
     /* ── FOOTER ── */
     footer {
       background: var(--dark);
-      color: rgba(255,255,255,0.5);
-      padding: 2.5rem var(--pad);
+      color: rgba(255,255,255,0.45);
+      padding: 2.5rem 7%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -265,17 +271,24 @@
       font-size: 0.68rem;
       letter-spacing: 0.1em;
     }
-    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
-    footer a:hover { color: rgba(255,255,255,0.8); }
+    footer a { color: rgba(255,255,255,0.45); text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: rgba(255,255,255,0.85); }
 
     /* ── RESPONSIVE ── */
-    @media (max-width: 720px) {
-      .hero-top { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
-      .hero-top img { width: 120px; }
+    @media (max-width: 800px) {
+      .hero-top {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+      }
+      .hero-top img { width: 150px; }
+      .hero-top h1 { font-size: 2rem; }
+      .hero-body { font-size: 1.05rem; }
       .thrust-row, .foundation-row { grid-template-columns: 1fr; }
       .thrust-text { border-right: none; border-bottom: 1px solid rgba(26,92,69,0.1); }
-      .thrust-img { min-height: 180px; }
-      nav { gap: 1.5rem; }
+      .thrust-img { min-height: 200px; }
+      nav { padding: 0.9rem 5%; gap: 1.5rem; }
+      section { padding: 3.5rem 5%; }
+      .hero-inner { padding: 6rem 5% 4rem; }
     }
   </style>
 </head>
@@ -296,7 +309,7 @@
     <div class="hero-inner">
 
       <div class="hero-top">
-        <img src="logo.png" alt="CFT Lab logo" />
+        <img src="logo.png" alt="CFT Lab" />
         <h1>We study what happens to transport when <em>the flow changes the medium.</em></h1>
       </div>
 
@@ -320,11 +333,10 @@
 
   <!-- RESEARCH -->
   <section id="research">
-    <div style="max-width:1060px;margin:0 auto;">
+    <div class="section-inner">
       <p class="section-label">Research Program</p>
       <h2 class="section-title">Two thrusts. <em>One physics.</em></h2>
 
-      <!-- Thrust I -->
       <div class="thrust-row" data-reveal>
         <div class="thrust-text">
           <p class="thrust-label">Thrust I</p>
@@ -338,7 +350,6 @@
         <div class="thrust-img">Figure &mdash; coming soon</div>
       </div>
 
-      <!-- Thrust II -->
       <div class="thrust-row" data-reveal style="transition-delay:0.1s;">
         <div class="thrust-text">
           <p class="thrust-label">Thrust II</p>
@@ -352,7 +363,6 @@
         <div class="thrust-img">Figure &mdash; coming soon</div>
       </div>
 
-      <!-- Shared Foundation -->
       <div class="foundation-row" data-reveal>
         <div class="thrust-text">
           <p class="thrust-label">Shared Foundation</p>
@@ -374,7 +384,7 @@
 
   <!-- NEWS -->
   <section id="news">
-    <div style="max-width:1060px;margin:0 auto;">
+    <div class="section-inner">
       <p class="section-label">Latest</p>
       <h2 class="section-title">News &amp; <em>Updates.</em></h2>
 
@@ -390,7 +400,6 @@
         <span class="news-date">Jun 2025</span>
         <span class="news-text"><strong>ASME Summer Bioengineering Conference</strong> &mdash; SB3C, presentation at the annual meeting</span>
       </div>
-
     </div>
   </section>
 
@@ -402,11 +411,11 @@
   </footer>
 
 
-  <!-- LIVE PARTICLE ANIMATION -->
   <script>
+  /* ── PARTICLES ── */
   (function() {
     var canvas = document.getElementById('particle-canvas');
-    var ctx    = canvas.getContext('2d');
+    var ctx = canvas.getContext('2d');
     var W, H, pts = [];
     var TEAL = 'rgba(26,92,69,';
 
@@ -420,17 +429,17 @@
     Pt.prototype.init = function() {
       this.x   = Math.random() * W;
       this.y   = Math.random() * H;
-      this.vx  = (Math.random() - 0.5) * 0.45;
-      this.vy  = (Math.random() - 0.38) * 0.28;
+      this.vx  = (Math.random() - 0.5) * 0.42;
+      this.vy  = (Math.random() - 0.38) * 0.26;
       this.age = 0;
-      this.max = 200 + Math.random() * 300;
-      this.r   = 0.7 + Math.random() * 1.4;
+      this.max = 220 + Math.random() * 320;
+      this.r   = 0.7 + Math.random() * 1.5;
     };
     Pt.prototype.step = function() {
       var t = this.x * 0.005 + this.y * 0.004;
-      this.vx += Math.cos(t + this.age * 0.011) * 0.013;
-      this.vy += Math.sin(t * 0.9 + this.age * 0.009) * 0.010;
-      this.vx *= 0.984; this.vy *= 0.984;
+      this.vx += Math.cos(t + this.age * 0.011) * 0.012;
+      this.vy += Math.sin(t * 0.9  + this.age * 0.009) * 0.009;
+      this.vx *= 0.985; this.vy *= 0.985;
       this.x  += this.vx; this.y += this.vy; this.age++;
       if (this.age > this.max || this.x < -10 || this.x > W+10 ||
           this.y < -10 || this.y > H+10) this.init();
@@ -439,14 +448,13 @@
       var a = Math.min(this.age/40,1) * Math.min((this.max-this.age)/40,1);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, 6.2832);
-      ctx.fillStyle = TEAL + (a * 0.55) + ')';
+      ctx.fillStyle = TEAL + (a*0.55) + ')';
       ctx.fill();
     };
 
     function init() {
-      resize();
-      pts = [];
-      for (var i = 0; i < 240; i++) {
+      resize(); pts = [];
+      for (var i = 0; i < 260; i++) {
         var p = new Pt();
         p.age = Math.floor(Math.random() * p.max);
         pts.push(p);
@@ -457,14 +465,13 @@
       ctx.clearRect(0, 0, W, H);
       for (var i = 0; i < pts.length; i++) {
         for (var j = i+1; j < pts.length; j++) {
-          var dx = pts[i].x - pts[j].x;
-          var dy = pts[i].y - pts[j].y;
+          var dx = pts[i].x - pts[j].x, dy = pts[i].y - pts[j].y;
           var d  = Math.sqrt(dx*dx + dy*dy);
-          if (d < 90) {
+          if (d < 95) {
             ctx.beginPath();
             ctx.moveTo(pts[i].x, pts[i].y);
             ctx.lineTo(pts[j].x, pts[j].y);
-            ctx.strokeStyle = TEAL + ((1 - d/90) * 0.08) + ')';
+            ctx.strokeStyle = TEAL + ((1-d/95)*0.08) + ')';
             ctx.lineWidth = 0.7;
             ctx.stroke();
           }
@@ -475,27 +482,22 @@
       requestAnimationFrame(loop);
     }
 
-    window.addEventListener('resize', function() {
-      resize();
-    });
-    init();
-    loop();
+    window.addEventListener('resize', resize);
+    init(); loop();
   })();
-  </script>
 
-  <!-- SCROLL REVEAL -->
-  <script>
+  /* ── SCROLL REVEAL ── */
   (function() {
     var els = document.querySelectorAll('[data-reveal]');
-    var observer = new IntersectionObserver(function(entries) {
+    var io  = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
         if (e.isIntersecting) {
           e.target.classList.add('visible');
-          observer.unobserve(e.target);
+          io.unobserve(e.target);
         }
       });
     }, { threshold: 0.12 });
-    els.forEach(function(el) { observer.observe(el); });
+    els.forEach(function(el) { io.observe(el); });
   })();
   </script>
 

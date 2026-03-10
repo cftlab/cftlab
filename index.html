@@ -4,24 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CFT Lab — Complex Flows and Advanced Transport</title>
-  <meta name="description" content="Complex Flows and Advanced Transport Lab at Cleveland State University. We study transport in flow-responsive systems where classical models fail." />
+  <meta name="description" content="Complex Flows and Advanced Transport Lab at Cleveland State University." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Nunito:wght@400;600;700&family=Gugi&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --bg:   #f7f6f2;
-      --teal: #1a5c45;
-      --dark: #1a1a18;
-      --mid:  #50504a;
-      --dim:  #8a8a84;
-      --rule: rgba(26,92,69,0.12);
+      --bg:     #f7f6f2;
+      --teal:   #1a5c45;
+      --dark:   #1a1a18;
+      --mid:    #50504a;
+      --dim:    #8a8a84;
+      --orange: rgb(240,90,41);
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(26,92,69,0.12);
     }
-
     html { scroll-behavior: smooth; }
-
     body {
       background: var(--bg);
       color: var(--dark);
@@ -33,604 +32,722 @@
 
     /* ── NAV ── */
     nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       background: rgba(247,246,242,0.94);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid var(--rule);
-      padding: 0.9rem 7%;
-      display: flex;
-      justify-content: center;
-      gap: 2.5rem;
-      align-items: center;
+      padding: 0 7%;
+      height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; text-decoration: none;
+      flex-shrink: 0;
+    }
+    .nav-logo img {
+      height: 38px; width: auto;
+    }
+    .nav-links {
+      display: flex; align-items: center; gap: 2.5rem;
     }
     nav a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--teal);
-      text-decoration: none;
-      transition: opacity 0.2s;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--teal); text-decoration: none; transition: opacity 0.2s;
     }
     nav a:hover { opacity: 0.55; }
     nav a.dim { color: var(--dim); }
 
     /* ── HERO ── */
     #hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      overflow: hidden;
+      display: flex; flex-direction: column; align-items: center;
+      padding-top: 54px;
       border-bottom: 1px solid var(--rule);
     }
-    #hero canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
+    #flow-canvas {
+      display: block; width: 100%; height: 58vh; min-height: 360px;
     }
-    /* Spacer that reserves the animation zone at the top */
-    .hero-anim-space {
-      flex: 1;
-      min-height: 44vh;
+    .hero-text {
+      width: 100%; max-width: 1100px;
+      padding: 2.8rem 7% 5rem;
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center;
     }
-    .hero-inner {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 1100px;
-      align-self: center;
-      padding: 0 7% 5rem;
-    }
-
-    /* Logo + headline side by side */
-    .hero-top {
-      display: grid;
-      grid-template-columns: 220px 1fr;
-      gap: 3.5rem;
-      align-items: center;
+    .lab-name {
+      font-family: 'Gugi', sans-serif;
+      font-size: clamp(0.95rem, 1.35vw, 1.3rem);
+      letter-spacing: 0.08em;
+      color: var(--gray57);
       margin-bottom: 2.2rem;
+      line-height: 1.5;
     }
-    .hero-top img {
-      width: 220px;
-      height: auto;
+    .lab-name .accent { color: var(--orange); }
+    .hero-headline {
+      font-size: clamp(1.9rem, 2.4vw, 2.7rem);
+      font-weight: 300; line-height: 1.22; color: var(--dark);
+      letter-spacing: -0.01em; margin-bottom: 1.8rem;
     }
-    .hero-top h1 {
-      font-size: clamp(1.9rem, 2.4vw, 2.6rem);
-      font-weight: 300;
-      line-height: 1.22;
-      color: var(--dark);
-      letter-spacing: -0.01em;
-    }
-    .hero-top h1 em {
-      font-style: italic;
-      color: var(--teal);
-    }
-
-    .rule {
-      width: 44px;
-      height: 2px;
-      background: var(--teal);
-      margin: 0 0 1.6rem;
-    }
+    .hero-headline em { font-style: italic; color: var(--teal); }
+    .rule { width: 44px; height: 2px; background: var(--teal); margin: 0 0 1.6rem; }
     .hero-body {
-      font-size: 1.35rem;
-      font-weight: 400;
-      color: var(--mid);
-      max-width: 780px;
-      line-height: 1.85;
-      margin-bottom: 1.2rem;
+      font-size: 1.35rem; font-weight: 400; color: var(--mid);
+      max-width: 780px; line-height: 1.85; margin-bottom: 1.2rem;
     }
     .hero-caps {
-      font-style: italic;
-      font-size: 1.28rem;
-      font-weight: 400;
-      color: var(--teal);
-      max-width: 680px;
+      font-style: italic; font-size: 1.28rem; font-weight: 400;
+      color: var(--teal); max-width: 680px;
     }
 
     /* ── SECTIONS ── */
-    section {
-      padding: 5rem 7%;
-    }
+    section { padding: 5rem 7%; }
     section:nth-child(even) { background: #f0efe9; }
-
-    .section-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
     .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 0.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.5rem;
     }
     .section-title {
-      font-size: clamp(1.8rem, 2.8vw, 2.8rem);
-      font-weight: 300;
-      color: var(--dark);
-      margin-bottom: 2.8rem;
-      line-height: 1.2;
+      font-size: clamp(1.8rem, 2.8vw, 2.8rem); font-weight: 300;
+      color: var(--dark); margin-bottom: 2.8rem; line-height: 1.2;
     }
     .section-title em { font-style: italic; color: var(--teal); }
 
     /* ── THRUST ROWS ── */
     .thrust-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid rgba(26,92,69,0.15);
-      border-top: 2px solid var(--teal);
-      background: #fff;
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      transform: translateY(28px);
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(26,92,69,0.15); border-top: 2px solid var(--teal);
+      background: #fff; margin-bottom: 1.5rem;
+      opacity: 0; transform: translateY(28px);
       transition: opacity 0.65s ease, transform 0.65s ease;
     }
     .thrust-row.visible { opacity: 1; transform: translateY(0); }
-
     .foundation-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      border: 1px solid rgba(26,92,69,0.2);
-      border-left: 3px solid var(--teal);
+      display: grid; grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(26,92,69,0.2); border-left: 3px solid var(--teal);
       background: #fff;
-      opacity: 0;
-      transform: translateY(28px);
+      opacity: 0; transform: translateY(28px);
       transition: opacity 0.65s ease 0.15s, transform 0.65s ease 0.15s;
     }
     .foundation-row.visible { opacity: 1; transform: translateY(0); }
-
-    .thrust-text {
-      padding: 2.4rem 2.6rem;
-      border-right: 1px solid rgba(26,92,69,0.1);
-    }
+    .thrust-text { padding: 2.4rem 2.6rem; border-right: 1px solid rgba(26,92,69,0.1); }
     .thrust-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--teal);
-      margin-bottom: 0.6rem;
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 0.6rem;
     }
-    .thrust-title {
-      font-size: 1.35rem;
-      font-weight: 400;
-      color: var(--dark);
-      margin-bottom: 1rem;
-      line-height: 1.3;
-    }
-    .thrust-body {
-      font-size: 1.15rem;
-      font-weight: 400;
-      color: var(--mid);
-      line-height: 1.85;
-    }
+    .thrust-title { font-size: 1.35rem; font-weight: 400; color: var(--dark); margin-bottom: 1rem; line-height: 1.3; }
+    .thrust-body { font-size: 1.15rem; font-weight: 400; color: var(--mid); line-height: 1.85; }
     .thrust-img {
-      background: #f0efe9;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 240px;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #bbb;
+      background: #f0efe9; display: flex; align-items: center; justify-content: center;
+      min-height: 240px; font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.12em; text-transform: uppercase; color: #bbb;
     }
-    .thrust-img img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
     .more-link {
-      display: block;
-      text-align: right;
-      margin-top: 2rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--teal);
-      text-decoration: none;
-      transition: opacity 0.2s;
+      display: block; text-align: right; margin-top: 2rem;
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--teal); text-decoration: none; transition: opacity 0.2s;
     }
     .more-link:hover { opacity: 0.55; }
 
     /* ── NEWS ── */
     .news-row {
-      display: grid;
-      grid-template-columns: 120px 1fr;
-      gap: 1.5rem;
-      padding: 1.2rem 0;
-      border-bottom: 1px solid rgba(26,92,69,0.1);
+      display: grid; grid-template-columns: 120px 1fr; gap: 1.5rem;
+      padding: 1.2rem 0; border-bottom: 1px solid rgba(26,92,69,0.1);
       align-items: baseline;
-      opacity: 0;
-      transform: translateX(-14px);
+      opacity: 0; transform: translateX(-14px);
       transition: opacity 0.5s ease, transform 0.5s ease;
     }
     .news-row.visible { opacity: 1; transform: translateX(0); }
-    .news-date {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      color: var(--teal);
-      padding-top: 0.1rem;
-    }
+    .news-date { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--teal); }
     .news-text { font-size: 1.05rem; color: #3a3a35; line-height: 1.7; }
     .news-text strong { font-weight: 600; color: var(--dark); }
 
     /* ── FOOTER ── */
     footer {
       background: var(--dark);
-      color: rgba(255,255,255,0.55);
-      padding: 3rem 7%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 2rem;
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
     }
-    .footer-left {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
+    .footer-csu a {
+      display: block; text-decoration: none;
     }
-    .footer-left img {
-      height: 48px;
-      width: auto;
-      background: rgba(255,255,255,0.93);
-      padding: 5px 12px;
-      border-radius: 3px;
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
     }
     .footer-divider {
-      width: 1px;
-      height: 44px;
-      background: rgba(255,255,255,0.15);
+      width: 1px; height: 52px;
+      background: rgba(255,255,255,0.18);
+      flex-shrink: 0;
     }
-    .footer-text {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
+    .footer-dept {
+      text-align: center; flex: 1;
     }
-    .footer-text a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      letter-spacing: 0.1em;
-      text-decoration: none;
-      transition: color 0.2s;
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.75rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
     }
-    .footer-lab {
-      color: rgba(255,255,255,0.85);
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1.05rem;
-      font-weight: 400;
-      letter-spacing: 0.02em;
+    .footer-dept a:hover { color: rgba(255,255,255,0.88); }
+    .footer-group img {
+      height: 52px; width: auto;
+      opacity: 0.88; transition: opacity 0.2s;
     }
-    .footer-dept { color: rgba(255,255,255,0.5); }
-    .footer-dept:hover { color: rgba(255,255,255,0.85); }
-    .footer-right {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-    }
-    .footer-right a {
-      color: rgba(255,255,255,0.5);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-right a:hover { color: rgba(255,255,255,0.88); }
-
-    @media (max-width: 600px) {
-      footer { flex-direction: column; align-items: flex-start; }
-      .footer-divider { display: none; }
-    }
+    .footer-group img:hover { opacity: 1; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 800px) {
-      .hero-top {
-        grid-template-columns: 1fr;
-        gap: 1.8rem;
-      }
-      .hero-top img { width: 150px; }
-      .hero-top h1 { font-size: 2rem; }
+      .hero-headline { font-size: 2rem; }
       .hero-body { font-size: 1.05rem; }
       .thrust-row, .foundation-row { grid-template-columns: 1fr; }
       .thrust-text { border-right: none; border-bottom: 1px solid rgba(26,92,69,0.1); }
       .thrust-img { min-height: 200px; }
-      nav { padding: 0.9rem 5%; gap: 1.5rem; }
+      nav { padding: 0 5%; }
       section { padding: 3.5rem 5%; }
-      .hero-inner { padding: 0 5% 4rem; }
+      .hero-text { padding: 2rem 5% 4rem; }
+      #flow-canvas { height: 45vh; }
     }
+    @media (max-width: 600px) {
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+
+    /* ── Flow speed slider ── */
+    .speed-wrap {
+      position: absolute; bottom: 1.4rem; right: 2.2rem;
+      display: flex; align-items: center; gap: 0.7rem;
+      z-index: 10;
+    }
+    .speed-label {
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(26,92,69,0.60);
+    }
+    .speed-slider {
+      -webkit-appearance: none; appearance: none;
+      width: 90px; height: 3px;
+      background: rgba(26,92,69,0.20);
+      border-radius: 2px; outline: none; cursor: pointer;
+    }
+    .speed-slider::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 12px; height: 12px; border-radius: 50%;
+      background: rgb(26,92,69); cursor: pointer;
+    }
+    .speed-slider::-moz-range-thumb {
+      width: 12px; height: 12px; border-radius: 50%;
+      background: rgb(26,92,69); border: none; cursor: pointer;
+    }
+    #hero { position: relative; }
   </style>
 </head>
 <body>
 
-  <!-- NAV -->
-  <nav>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
     <a href="#research">Research</a>
     <a href="people.html">People</a>
     <a href="publications.html" class="dim">Publications</a>
     <a href="join.html" class="dim">Join</a>
-  </nav>
+  </div>
+</nav>
 
+<div id="hero">
+  <canvas id="flow-canvas"></canvas>
+  <div class="speed-wrap">
+    <span class="speed-label">Flow</span>
+    <input class="speed-slider" id="speed-slider" type="range" min="0" max="100" value="50" />
+    <span class="speed-label">Fast</span>
+  </div>
+  <div class="hero-text">
+    <p class="lab-name"><span class="accent">C</span>omplex <span class="accent">F</span>lows and Advanced <span class="accent">T</span>ransport Lab</p>
+    <h1 class="hero-headline">We study what happens to transport when <em>the flow changes the medium.</em></h1>
+    <div class="rule"></div>
+    <p class="hero-body">
+      Our research is built on a single observation: transport in systems with
+      flow-responsive boundaries and material properties cannot be described by
+      classical models, and closing this gap requires new physics across membrane
+      separation, biological flows, and complex mixing.
+    </p>
+    <p class="hero-caps">
+      Direct numerical simulations, coupled multiphysics, and scientific machine
+      learning &mdash; all realized on high-performance computing.
+    </p>
+  </div>
+</div>
 
-  <!-- HERO -->
-  <div id="hero">
-    <canvas id="particle-canvas"></canvas>
-    <div class="hero-anim-space"></div>
-    <div class="hero-inner">
-
-      <div class="hero-top">
-        <img src="logo.png" alt="CFT Lab" />
-        <h1>We study what happens to transport when <em>the flow changes the medium.</em></h1>
+<section id="research">
+  <div class="section-inner">
+    <p class="section-label">Research Program</p>
+    <h2 class="section-title">Two thrusts. <em>One physics.</em></h2>
+    <div class="thrust-row" data-reveal>
+      <div class="thrust-text">
+        <p class="thrust-label">Thrust I</p>
+        <h3 class="thrust-title">Bioflow &amp; Hemodynamics</h3>
+        <p class="thrust-body">
+          Classical hemodynamic models predict biological outcomes from instantaneous local
+          conditions. Biology does not work this way &mdash; proteins activate, cells damage,
+          and signals propagate based on the accumulated history of mechanical exposure. We
+          build the transport frameworks that make this history physically legible: data-driven
+          models for macromolecular activation, exposure-based cellular damage metrics, and
+          mechanistic descriptions of flow-mediated intercellular signaling.
+        </p>
       </div>
+      <div class="thrust-img">Figure &mdash; coming soon</div>
+    </div>
+    <div class="thrust-row" data-reveal style="transition-delay:0.1s;">
+      <div class="thrust-text">
+        <p class="thrust-label">Thrust II</p>
+        <h3 class="thrust-title">Flow-Coupled Functional Surfaces</h3>
+        <p class="thrust-body">
+          Functional surface science has historically treated flow as a passive delivery
+          mechanism. This framing misses the dominant physics. Membrane performance, catalytic
+          reaction rates, and surface-mediated separation are governed by bidirectional coupling
+          between local flow structure and surface response &mdash; the surface breathes, responds,
+          and feeds back on the flow. Active work on centrifugal reverse osmosis, stimuli-responsive
+          polymer membranes, and flow-history-dependent fouling and polarization.
+        </p>
+      </div>
+      <div class="thrust-img">Figure &mdash; coming soon</div>
+    </div>
+    <div class="foundation-row" data-reveal>
+      <div class="thrust-text">
+        <p class="thrust-label">Shared Foundation</p>
+        <p class="thrust-body">
+          Both thrusts draw from a common methodological foundation: transport physics in regimes
+          where classical closure models fail. Variable-property turbulence, high-Schmidt-number
+          scalar transport, and viscosity-gradient-driven laminarization &mdash; each diagnosed
+          through high-fidelity simulation. Near-wall particle dynamics extends this foundation
+          into territory where continuum assumptions fail. This is the physical language both
+          thrusts require, and the credibility that our claims about model failure are not conjectural.
+        </p>
+      </div>
+      <div class="thrust-img">Figure &mdash; coming soon</div>
+    </div>
+    <a href="research.html" class="more-link">Full research overview &rarr;</a>
+  </div>
+</section>
 
-      <div class="rule"></div>
-
-      <p class="hero-body">
-        Our research is built on a single observation: transport in systems with
-        flow-responsive boundaries and material properties cannot be described by
-        classical models, and closing this gap requires new physics across membrane
-        separation, biological flows, and complex mixing.
-      </p>
-
-      <p class="hero-caps">
-        Direct numerical simulations, coupled multiphysics, and scientific machine
-        learning &mdash; all realized on high-performance computing.
-      </p>
-
+<section id="news">
+  <div class="section-inner">
+    <p class="section-label">Latest</p>
+    <h2 class="section-title">News &amp; <em>Updates.</em></h2>
+    <div class="news-row" data-reveal>
+      <span class="news-date">Nov 2025</span>
+      <span class="news-text"><strong>APS Division of Fluid Dynamics</strong> &mdash; Abstract presented at the annual meeting</span>
+    </div>
+    <div class="news-row" data-reveal style="transition-delay:0.08s;">
+      <span class="news-date">Jul 2025</span>
+      <span class="news-text"><strong>17th U.S. National Congress on Computational Mechanics</strong> &mdash; Two abstracts presented</span>
+    </div>
+    <div class="news-row" data-reveal style="transition-delay:0.16s;">
+      <span class="news-date">Jun 2025</span>
+      <span class="news-text"><strong>ASME Summer Bioengineering Conference</strong> &mdash; SB3C, presentation at the annual meeting</span>
     </div>
   </div>
+</section>
 
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
 
-  <!-- RESEARCH -->
-  <section id="research">
-    <div class="section-inner">
-      <p class="section-label">Research Program</p>
-      <h2 class="section-title">Two thrusts. <em>One physics.</em></h2>
+<script>
+(function() {
+  var canvas = document.getElementById('flow-canvas');
+  var ctx    = canvas.getContext('2d');
+  var W, H, t = 0;
 
-      <div class="thrust-row" data-reveal>
-        <div class="thrust-text">
-          <p class="thrust-label">Thrust I</p>
-          <h3 class="thrust-title">Bioflow &amp; Hemodynamics</h3>
-          <p class="thrust-body">
-            Classical hemodynamic models predict biological outcomes from instantaneous
-            local conditions. Biology does not work this way &mdash; proteins activate,
-            cells damage, and signals propagate based on the accumulated history of
-            mechanical exposure. We build the transport frameworks that make this history
-            physically legible: data-driven models for macromolecular activation,
-            exposure-based cellular damage metrics, and mechanistic descriptions of
-            flow-mediated intercellular signaling that current models cannot capture.
-          </p>
-        </div>
-        <div class="thrust-img">Figure &mdash; coming soon</div>
-      </div>
+  /* ── Node data (0-indexed, normalized 0–1 in cluster space) ── */
+  var NODES_RAW = [
+    [0.65341,0.00748,0.02458],[0.33350,0.00000,0.01550],[0.55118,0.01434,0.02459],
+    [0.43156,0.01434,0.01548],[0.22661,0.02866,0.01548],[0.76760,0.03758,0.02461],
+    [0.35873,0.07557,0.01848],[0.43505,0.08630,0.03060],[0.56727,0.08426,0.02458],
+    [0.22052,0.08992,0.02459],[0.65889,0.13994,0.04261],[0.31093,0.12561,0.02458],
+    [0.85385,0.13995,0.02457],[0.11713,0.14712,0.02459],[0.43155,0.17575,0.02458],
+    [0.55122,0.18118,0.03061],[0.31739,0.19907,0.03059],[0.20449,0.24668,0.02456],
+    [0.75150,0.27530,0.02456],[0.92955,0.27531,0.02456],[0.11979,0.31109,0.03663],
+    [0.55459,0.32173,0.04265],[0.27485,0.33614,0.05467],[0.67493,0.33256,0.04261],
+    [0.02948,0.34134,0.02458],[0.43969,0.34133,0.02456],[0.98802,0.39313,0.01550],
+    [0.79546,0.40749,0.03059],[0.92024,0.42180,0.02457],[0.18345,0.45677,0.03660],
+    [0.00402,0.45038,0.02457],[0.35359,0.45995,0.03059],[0.98795,0.47900,0.01848],
+    [0.53513,0.50604,0.02459],[0.65341,0.52523,0.04262],[0.86994,0.52521,0.03061],
+    [0.10779,0.54387,0.03059],[0.37078,0.56419,0.03059],[0.00958,0.58516,0.02459],
+    [0.21565,0.61618,0.04864],[1.00000,0.62614,0.01546],[0.74497,0.63732,0.02458],
+    [0.64179,0.66438,0.04864],[0.86998,0.67867,0.04261],[0.00000,0.66437,0.01550],
+    [0.39083,0.70059,0.04865],[0.53855,0.70059,0.02458],[0.11707,0.70806,0.03059],
+    [0.96641,0.73671,0.02458],[0.01603,0.74351,0.01848],[0.25879,0.75784,0.02460],
+    [0.75148,0.75781,0.02458],[0.14228,0.80242,0.02459],[0.33086,0.82987,0.04864],
+    [0.87668,0.82152,0.02459],[0.43968,0.81917,0.01848],[0.55118,0.85197,0.03661],
+    [0.71934,0.85200,0.02458],[0.10098,0.88058,0.01847],[0.38682,0.93374,0.03059],
+    [0.29485,0.92904,0.02459],[0.65339,0.92904,0.02457],[0.83776,0.93378,0.01549],
+    [0.22859,0.98575,0.01850],[0.57773,1.00000,0.01842]
+  ];
 
-      <div class="thrust-row" data-reveal style="transition-delay:0.1s;">
-        <div class="thrust-text">
-          <p class="thrust-label">Thrust II</p>
-          <h3 class="thrust-title">Flow-Coupled Functional Surfaces</h3>
-          <p class="thrust-body">
-            Functional surface science has historically treated flow as a passive
-            delivery mechanism. This framing misses the dominant physics. Membrane
-            performance, catalytic reaction rates, and surface-mediated separation
-            are all governed by the bidirectional coupling between local flow structure
-            and surface response &mdash; the surface breathes, responds, and feeds back
-            on the flow. We study this coupling as a general physical problem, with
-            active work on centrifugal reverse osmosis, stimuli-responsive polymer
-            membranes, and flow-history-dependent fouling and polarization.
-          </p>
-        </div>
-        <div class="thrust-img">Figure &mdash; coming soon</div>
-      </div>
+  /* ── Connections (0-indexed) ── */
+  var CONNS = [
+    [23,27],[17,22],[50,53],[28,32],[48,54],[56,64],[20,24],[30,38],[45,55],
+    [36,39],[33,46],[0,2],[47,49],[59,63],[22,29],[4,9],[5,12],[19,26],
+    [40,48],[8,15],[6,11],[1,3],[62,64],[12,18],[27,35],[29,31],[7,14],
+    [58,63],[43,48],[22,34],[21,25],[45,51],[15,22],[56,59],[33,37],[52,60],
+    [36,38],[44,47],[53,55],[54,62],[3,7],[0,5],[12,19],[10,21],[23,34],
+    [33,42],[35,41],[43,51],[60,63],[49,58],[38,44],[26,28],[32,40],[61,64],
+    [56,57],[37,50],[16,17],[1,4],[3,6],[13,14],[10,15],[2,8],[24,30],
+    [20,22],[29,39],[13,20],[9,13]
+  ];
 
-      <div class="foundation-row" data-reveal>
-        <div class="thrust-text">
-          <p class="thrust-label">Shared Foundation</p>
-          <p class="thrust-body">
-            Both thrusts draw from a common methodological foundation: transport
-            physics in regimes where classical closure models fail. Variable-property
-            turbulence, high-Schmidt-number scalar transport, and viscosity-gradient-driven
-            laminarization each represent breakdown modes of standard theory that we
-            have diagnosed and characterized through high-fidelity simulation. Near-wall
-            particle dynamics &mdash; migration, margination, and surface interaction
-            of finite-size particles under realistic flow conditions &mdash; extends this
-            foundation into territory where continuum assumptions fail and classical
-            transport theory has no clean answer. This foundation provides the physical
-            language both thrusts require &mdash; and the credibility that our claims
-            about model failure are not conjectural.
-          </p>
-        </div>
-        <div class="thrust-img">Figure &mdash; coming soon</div>
-      </div>
+  /*
+   * Y-seeds: 1 outside top, 10 interior through cluster, 1 outside bottom.
+   * Interior concentrated 0.05–0.95 so all pass through nodes.
+   * Cluster aspect: width/height = 0.890 (taller than wide).
+   */
+  var Y_SEEDS = [
+    0.20,
+    0.3000, 0.3444, 0.3889, 0.4333, 0.4778,
+    0.5222, 0.5667, 0.6111, 0.6556, 0.7000,
+    0.80
+  ];
 
-      <a href="research.html" class="more-link">Full research overview &rarr;</a>
-    </div>
-  </section>
+  /* ── Colors ── */
+  var C_BLUE_HI = [30,145,220];
+  var C_BLUE_LO = [18, 65,160];
+  var C_ORANGE  = [240, 90, 41];
+  var C_TEAL    = [26,  92, 69];
+  /* Two molecule types: triangle=teal, hexagon=warm orange-red */
+  var C_TRI     = [26,  92, 69];   /* teal */
+  var C_HEX     = [200, 60, 20];   /* brick-orange */
+  function rgba(c,a){ return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
 
+  /* ── Layout — preserve cluster aspect ratio 0.890 (w/h) ── */
+  var nodes = [];
+  var SX, SY, OX, OY;   /* separate x and y scales */
 
-  <!-- NEWS -->
-  <section id="news">
-    <div class="section-inner">
-      <p class="section-label">Latest</p>
-      <h2 class="section-title">News &amp; <em>Updates.</em></h2>
-
-      <div class="news-row" data-reveal>
-        <span class="news-date">Nov 2025</span>
-        <span class="news-text"><strong>APS Division of Fluid Dynamics</strong> &mdash; Abstract presented at the annual meeting</span>
-      </div>
-      <div class="news-row" data-reveal style="transition-delay:0.08s;">
-        <span class="news-date">Jul 2025</span>
-        <span class="news-text"><strong>17th U.S. National Congress on Computational Mechanics</strong> &mdash; Two abstracts presented</span>
-      </div>
-      <div class="news-row" data-reveal style="transition-delay:0.16s;">
-        <span class="news-date">Jun 2025</span>
-        <span class="news-text"><strong>ASME Summer Bioengineering Conference</strong> &mdash; SB3C, presentation at the annual meeting</span>
-      </div>
-    </div>
-  </section>
-
-
-  <!-- FOOTER -->
-  <footer>
-    <div class="footer-left">
-      <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
-        <img src="csu_logo.png" alt="Cleveland State University" />
-      </a>
-      <div class="footer-divider"></div>
-      <div class="footer-text">
-        <span class="footer-lab">Complex Flows and Advanced Transport Lab</span>
-        <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener" class="footer-text footer-dept">
-          Department of Mechanical Engineering
-        </a>
-      </div>
-    </div>
-    <div class="footer-right">
-      <a href="mailto:m.usta@csuohio.edu">m.usta@csuohio.edu</a>
-    </div>
-  </footer>
-
-
-  <script>
-  /* ── FLOW AROUND A DEFORMING PARTICLE ── */
-  (function() {
-    var canvas = document.getElementById('particle-canvas');
-    var ctx    = canvas.getContext('2d');
-    var W, H, t = 0;
-    var TEAL = [26, 92, 69];
-    var N_LINES = 30, N_EVS = 12, evs = [];
-
-    function rgba(c, a) { return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
-
-    function resize() {
-      var hero = document.getElementById('hero');
-      W = canvas.width  = hero.offsetWidth;
-      H = canvas.height = hero.offsetHeight;
-      initEVs();
+  function buildNodes() {
+    var PAD   = 0.16;   /* slightly smaller cluster */
+    var ASPECT = 1212.5 / 1362.4;  /* 0.8900 */
+    var availW = W * (1 - 2*PAD);
+    var availH = H * (1 - 2*PAD);
+    /* Fit cluster (aspect < 1 = taller) into available space */
+    if (availW / availH < ASPECT) {
+      /* width-constrained */
+      SX = availW;
+      SY = availW / ASPECT;
+    } else {
+      /* height-constrained */
+      SY = availH;
+      SX = availH * ASPECT;
     }
+    OX = (W - SX) / 2;
+    OY = (H - SY) / 2;
 
-    function initEVs() {
-      evs = [];
-      for (var i = 0; i < N_EVS; i++) {
-        evs.push({
-          angle: (i / N_EVS) * Math.PI * 2,
-          r:     1.55 + Math.random() * 1.1,
-          speed: (0.003 + Math.random() * 0.004) * (Math.random() < 0.5 ? 1 : -1),
-          size:  1.6 + Math.random() * 2.2,
-          alpha: 0.3 + Math.random() * 0.35
+    nodes = NODES_RAW.map(function(n, i){
+      return {
+        x:  OX + n[0]*SX,
+        y:  OY + n[1]*SY,
+        r:  Math.max(2.5, n[2]*SX),
+        vk: Math.random()*Math.PI*2,
+        st: 0.16 + Math.random()*0.06,
+        idx: i
+      };
+    });
+  }
+
+  /* ── Potential flow: uniform + Rankine doublets ── */
+  function velocity(px, py) {
+    var u = 1.0, v = 0.0;
+    for (var i = 0; i < nodes.length; i++) {
+      var n  = nodes[i];
+      var dx = px - n.x, dy = py - n.y;
+      var r2 = dx*dx + dy*dy;
+      var a2 = n.r * n.r * 3.2;
+      if (r2 < a2*0.25) return {u:0, v:0};
+      var r4 = r2*r2;
+      u -= a2*(dx*dx - dy*dy)/r4;
+      v -= a2*2*dx*dy/r4;
+    }
+    return {u:u, v:v};
+  }
+
+  /* von Kármán wake oscillation */
+  function wakeOffset(px, py, n) {
+    var dx = px - n.x;
+    if (dx < n.r*0.5) return 0;
+    var distLat = py - n.y;
+    var wakeW   = n.r*1.8 + dx*0.10;
+    if (Math.abs(distLat) > wakeW*3.0) return 0;
+    var decay = Math.exp(-dx/(SX*0.5)) * Math.exp(-distLat*distLat/(wakeW*wakeW));
+    return n.r*1.2 * decay * Math.sin(n.st*dx/n.r - t*2.0 + n.vk);
+  }
+
+  function isBlocked(px, py) {
+    for (var i = 0; i < nodes.length; i++) {
+      var dx = px-nodes[i].x, dy = py-nodes[i].y;
+      if (dx*dx + dy*dy < nodes[i].r*nodes[i].r*1.08) return true;
+    }
+    return false;
+  }
+
+  function nearNodeDist(px, py) {
+    var best = 1e9;
+    for (var i = 0; i < nodes.length; i++) {
+      var dx = px-nodes[i].x, dy = py-nodes[i].y;
+      var d = Math.sqrt(dx*dx+dy*dy) - nodes[i].r;
+      if (d < best) best = d;
+    }
+    return best;
+  }
+
+  /* ── Molecule drawing: triangle or hexagon ── */
+  function drawTriangle(x, y, angle, alpha) {
+    var R = 5.0;
+    ctx.save();
+    ctx.translate(x,y); ctx.rotate(angle);
+    ctx.beginPath();
+    for (var i=0;i<3;i++){
+      var a = i*Math.PI*2/3 - Math.PI/2;
+      if(i===0) ctx.moveTo(R*Math.cos(a), R*Math.sin(a));
+      else       ctx.lineTo(R*Math.cos(a), R*Math.sin(a));
+    }
+    ctx.closePath();
+    ctx.strokeStyle = rgba(C_TRI, alpha*0.80);
+    ctx.lineWidth   = 1.3;
+    ctx.stroke();
+    ctx.fillStyle   = rgba(C_TRI, alpha*0.18);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawHexagon(x, y, angle, alpha) {
+    var R = 5.0;
+    ctx.save();
+    ctx.translate(x,y); ctx.rotate(angle);
+    ctx.beginPath();
+    for (var i=0;i<6;i++){
+      var a = i*Math.PI/3;
+      if(i===0) ctx.moveTo(R*Math.cos(a), R*Math.sin(a));
+      else       ctx.lineTo(R*Math.cos(a), R*Math.sin(a));
+    }
+    ctx.closePath();
+    ctx.strokeStyle = rgba(C_HEX, alpha*0.80);
+    ctx.lineWidth   = 1.3;
+    ctx.stroke();
+    ctx.fillStyle   = rgba(C_HEX, alpha*0.15);
+    ctx.fill();
+    ctx.restore();
+  }
+
+  /* ── Streamline cache with persistent molecule positions ── */
+  var STREAMS = [];
+  var STEP      = 3.5;
+  var MOL_GAP   = 60;
+  var MOL_SPEED = 35;   /* px / second — overridden by slider */
+  var ABSORB    = 4;    /* px from surface — only absorb when nearly touching */
+
+  function traceStreams() {
+    STREAMS = [];
+    var N_STEPS = Math.ceil((W + 200)/STEP) + 100;
+
+    for (var li = 0; li < Y_SEEDS.length; li++) {
+      var yN  = Y_SEEDS[li];
+      var py0 = OY + yN * SY;
+      var px  = -STEP, py = py0;
+      var pts = [[px, py]];
+
+      for (var s = 0; s < N_STEPS; s++) {
+        if (isBlocked(px,py)) break;
+        var vel = velocity(px,py);
+        var mag = Math.sqrt(vel.u*vel.u + vel.v*vel.v);
+        if (mag < 0.001) break;
+        var nx = px + (vel.u/mag)*STEP;
+        var ny = py + (vel.v/mag)*STEP;
+        if (isBlocked(nx,ny)) break;
+        pts.push([nx,ny]);
+        px=nx; py=ny;
+        if (px > W+STEP) break;
+      }
+
+      /* arc-length */
+      var arc = [0];
+      for (var i=1;i<pts.length;i++){
+        var ddx=pts[i][0]-pts[i-1][0], ddy=pts[i][1]-pts[i-1][1];
+        arc.push(arc[i-1]+Math.sqrt(ddx*ddx+ddy*ddy));
+      }
+      var totalLen = arc[arc.length-1];
+
+      /* Fixed pool of 10 molecules per stream, staggered inlet entry */
+      var nMol = 10;
+      var mols = [];
+      for (var m=0; m<nMol; m++){
+        mols.push({
+          s:    -m * (totalLen / nMol + MOL_GAP),  /* staggered entry */
+          type: Math.random() < 0.5 ? 0 : 1
         });
       }
+
+      STREAMS.push({pts:pts, arc:arc, totalLen:totalLen, mols:mols});
     }
+  }
 
-    function flowVel(px, py, cx, cy, ax) {
-      var dx = px-cx, dy = py-cy, r2 = dx*dx+dy*dy;
-      if (r2 < 1) return { u:1, v:0 };
-      var a2=ax*ax, r4=r2*r2;
-      return { u: 1-(a2*(dx*dx-dy*dy)/r4), v: -(a2*2*dx*dy/r4) };
-    }
-    function inside(px, py, cx, cy, ax, ay) {
-      var dx=(px-cx)/ax, dy=(py-cy)/ay; return dx*dx+dy*dy<1.04;
-    }
+  function interpLine(pts, arc, s) {
+    var len = arc[arc.length-1];
+    if (len < 1) return {x:-999,y:0,angle:0};
+    s = ((s % len) + len) % len;
+    var lo=0, hi=arc.length-1;
+    while(hi-lo>1){ var mid=(lo+hi)>>1; if(arc[mid]<=s) lo=mid; else hi=mid; }
+    var f = (arc[hi]-arc[lo])>0 ? (s-arc[lo])/(arc[hi]-arc[lo]) : 0;
+    return {
+      x: pts[lo][0]+f*(pts[hi][0]-pts[lo][0]),
+      y: pts[lo][1]+f*(pts[hi][1]-pts[lo][1]),
+      angle: Math.atan2(pts[hi][1]-pts[lo][1], pts[hi][0]-pts[lo][0])
+    };
+  }
 
-    function drawFrame() {
-      t += 0.011;
-      ctx.clearRect(0, 0, W, H);
+  function drawStreams() {
+    var dt = MOL_SPEED/60.0 * speedMult;
 
-      /* Particle: horizontally centered, vertically in the upper animation zone */
-      var cx   = W * 0.50;
-      var cy   = H * 0.30;
-      var base = Math.min(W, H) * 0.11;
-      var breathe = Math.sin(t * 0.55);
-      var ax = base * (1.0 + 0.20 * breathe);
-      var ay = base * (1.0 - 0.13 * breathe);
+    for (var li=0; li<STREAMS.length; li++) {
+      var sl = STREAMS[li];
+      if (sl.pts.length < 2) continue;
 
-      /* ── Streamlines — steps scale with width so they always reach the edge ── */
-      var DT      = 4.0;
-      var N_STEPS = Math.ceil(W / DT) + 80;
-      var ySpread = H * 0.92;
-
-      for (var l = 0; l < N_LINES; l++) {
-        var yStart = (H - ySpread) / 2 + (l / (N_LINES-1)) * ySpread;
-        var px = -DT, py = yStart;
-        ctx.beginPath();
-        ctx.moveTo(px, py);
-        for (var s = 0; s < N_STEPS; s++) {
-          var v    = flowVel(px, py, cx, cy, ax * 1.04, ay * 1.04);
-          var zone = Math.abs(px-cx) < ax*3 && Math.abs(py-cy) < ay*4;
-          var step = zone ? DT*0.65 : DT;
-          var nx = px + v.u*step, ny = py + v.v*step;
-          if (inside(nx, ny, cx, cy, ax, ay)) break;
-          ctx.lineTo(nx, ny);
-          px = nx; py = ny;
-          if (px > W + DT) break;
-        }
-        var distY = Math.abs(yStart - cy);
-        var close = Math.max(0, 1 - distY / (H * 0.38));
-        ctx.strokeStyle = rgba(TEAL, 0.055 + close * 0.13);
-        ctx.lineWidth   = 0.7 + close * 0.7;
-        ctx.stroke();
+      /* Add wake deflection to each point before drawing */
+      ctx.beginPath();
+      for (var i=0; i<sl.pts.length; i++){
+        var px = sl.pts[i][0], py = sl.pts[i][1];
+        var wy = 0;
+        for (var d=0; d<nodes.length; d++) wy += wakeOffset(px,py,nodes[d]);
+        if (i===0) ctx.moveTo(px, py+wy); else ctx.lineTo(px, py+wy);
       }
-
-      /* ── Particle glow ── */
-      var grd = ctx.createRadialGradient(cx, cy, 0, cx, cy, ax*1.7);
-      grd.addColorStop(0,   rgba(TEAL, 0.08));
-      grd.addColorStop(0.6, rgba(TEAL, 0.03));
-      grd.addColorStop(1,   rgba(TEAL, 0));
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, ax*1.7, ay*1.7, 0, 0, Math.PI*2);
-      ctx.fillStyle = grd; ctx.fill();
-
-      /* ── Particle body ── */
-      ctx.beginPath();
-      ctx.ellipse(cx, cy, ax, ay, 0, 0, Math.PI*2);
-      ctx.strokeStyle = rgba(TEAL, 0.38);
-      ctx.lineWidth   = 1.6;
+      ctx.strokeStyle = rgba([26,92,69], 0.25);
+      ctx.lineWidth   = 1.5;
       ctx.stroke();
-      ctx.fillStyle = rgba(TEAL, 0.045); ctx.fill();
 
-      /* ── EV satellites ── */
-      for (var e = 0; e < evs.length; e++) {
-        var ev = evs[e];
-        ev.angle += ev.speed;
-        var ex = cx + Math.cos(ev.angle) * ax * ev.r;
-        var ey = cy + Math.sin(ev.angle) * ay * ev.r * 0.70;
-        ctx.beginPath();
-        ctx.arc(ex, ey, ev.size, 0, Math.PI*2);
-        ctx.fillStyle = rgba(TEAL, ev.alpha);
-        ctx.fill();
-      }
-
-      requestAnimationFrame(drawFrame);
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-    drawFrame();
-  })();
-
-  /* ── SCROLL REVEAL ── */
-  (function() {
-    var els = document.querySelectorAll('[data-reveal]');
-    var io  = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          e.target.classList.add('visible');
-          io.unobserve(e.target);
+      /* Advance + draw molecules — constant population, reset to inlet on absorption/exit */
+      for (var m=0; m<sl.mols.length; m++) {
+        var mol = sl.mols[m];
+        mol.s += dt;
+        var pos = interpLine(sl.pts, sl.arc, mol.s);
+        var mx = pos.x, my = pos.y;
+        /* Apply wake deflection */
+        var wy = 0;
+        for (var d=0; d<nodes.length; d++) wy += wakeOffset(mx, my, nodes[d]);
+        my += wy;
+        /* Reset to inlet if absorbed by node or past canvas right */
+        if (mx > W + 20) {
+          mol.s = -(Math.random() * sl.totalLen * 0.4); /* stagger re-entry */
+          mol.type = Math.random() < 0.5 ? 0 : 1;
+          continue;
         }
-      });
-    }, { threshold: 0.12 });
-    els.forEach(function(el) { io.observe(el); });
-  })();
-  </script>
+        if (nearNodeDist(mx,my) < ABSORB) {
+          mol.s = -(20 + Math.random() * sl.totalLen * 0.5);
+          mol.type = Math.random() < 0.5 ? 0 : 1;
+          continue;
+        }
+        /* Skip drawing when left of canvas */
+        if (mx < 2) continue;
+        var fade = Math.min(mx/50,1)*Math.min((W-mx)/50,1);
+        if (fade < 0.05) continue;
+        var alpha = 0.65 * fade;
+        if (mol.type === 0) drawTriangle(mx, my, pos.angle, alpha);
+        else                 drawHexagon (mx, my, pos.angle, alpha);
+      }
+    }
+  }
 
+  function drawConns() {
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1.3;
+    for (var k=0; k<CONNS.length; k++){
+      var a=nodes[CONNS[k][0]], b=nodes[CONNS[k][1]];
+      if(!a||!b) continue;
+      var dx=b.x-a.x, dy=b.y-a.y, d=Math.sqrt(dx*dx+dy*dy);
+      var alpha=Math.max(0.32, 0.75-d/(SX*0.55)*0.38);
+      ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+      ctx.strokeStyle=rgba(C_ORANGE,alpha); ctx.stroke();
+    }
+  }
+
+  function drawNodes() {
+    for (var i=0; i<nodes.length; i++){
+      var n=nodes[i], r=n.r;
+      var g=ctx.createRadialGradient(n.x,n.y,r*0.3,n.x,n.y,r*2.3);
+      g.addColorStop(0,rgba(C_BLUE_HI,0.14)); g.addColorStop(1,rgba(C_BLUE_HI,0));
+      ctx.beginPath(); ctx.arc(n.x,n.y,r*2.3,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      var b=ctx.createRadialGradient(n.x-r*0.28,n.y-r*0.28,r*0.05,n.x,n.y,r);
+      b.addColorStop(0,rgba(C_BLUE_HI,1.0)); b.addColorStop(0.5,rgba(C_BLUE_HI,0.82)); b.addColorStop(1,rgba(C_BLUE_LO,1.0));
+      ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.fillStyle=b; ctx.fill();
+      var sp=ctx.createRadialGradient(n.x-r*0.32,n.y-r*0.32,0,n.x-r*0.28,n.y-r*0.28,r*0.52);
+      sp.addColorStop(0,'rgba(255,255,255,0.80)'); sp.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.fillStyle=sp; ctx.fill();
+    }
+  }
+
+  /* Speed control — read by slider */
+  var speedMult = 1.0;
+  window.addEventListener('load', function() {
+    var sl = document.getElementById('speed-slider');
+    if (!sl) return;
+    function applySpeed() {
+      var v = sl.value / 50;  /* 0..2, default 1 at midpoint */
+      speedMult = v * v;      /* quadratic feel: gentle at low end */
+    }
+    sl.addEventListener('input', applySpeed);
+    applySpeed();
+  });
+
+  function frame() {
+    t += 0.0022 * speedMult;
+    ctx.clearRect(0,0,W,H);
+    drawStreams();
+    drawConns();
+    drawNodes();
+    requestAnimationFrame(frame);
+  }
+
+  function resize() {
+    W = canvas.width  = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    buildNodes();
+    traceStreams();
+  }
+
+  window.addEventListener('resize', resize);
+  window.addEventListener('load', function(){ resize(); frame(); });
+})();
+
+/* ── Scroll reveal ── */
+(function(){
+  var els=document.querySelectorAll('[data-reveal]');
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+    });
+  },{threshold:0.12});
+  els.forEach(function(el){io.observe(el);});
+})();
+</script>
 </body>
 </html>

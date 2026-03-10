@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CFT Lab — Complex Flows and Advanced Transport</title>
+  <meta name="description" content="Complex Flows and Advanced Transport Lab at Cleveland State University. We study transport in flow-responsive systems where classical models fail." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #f7f6f2;
+      --teal:    #1a5c45;
+      --dark:    #1a1a18;
+      --mid:     #50504a;
+      --dim:     #8a8a84;
+      --rule:    rgba(26,92,69,0.12);
+      --pad:     6%;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(247,246,242,0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0.9rem var(--pad);
+      display: flex;
+      gap: 2.5rem;
+      align-items: center;
+    }
+    nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.6; }
+    nav a.dim { color: var(--dim); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 7rem var(--pad) 4rem;
+      overflow: hidden;
+    }
+    #hero canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .hero-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+    }
+    .hero-top {
+      display: flex;
+      align-items: center;
+      gap: 2.5rem;
+      margin-bottom: 2rem;
+    }
+    .hero-top img {
+      width: 160px;
+      height: auto;
+      flex-shrink: 0;
+    }
+    .hero-top h1 {
+      font-size: clamp(2rem, 4vw, 3.6rem);
+      font-weight: 300;
+      line-height: 1.15;
+      color: var(--dark);
+    }
+    .hero-top h1 em {
+      font-style: italic;
+      color: var(--teal);
+    }
+    .rule {
+      width: 44px;
+      height: 2px;
+      background: var(--teal);
+      margin: 0 0 1.6rem;
+    }
+    .hero-body {
+      font-size: 1.05rem;
+      color: var(--mid);
+      max-width: 680px;
+      line-height: 1.9;
+      margin-bottom: 1.4rem;
+    }
+    .hero-caps {
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--teal);
+      max-width: 600px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem var(--pad); }
+    section:nth-child(even) { background: #f0efe9; }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 300;
+      color: var(--dark);
+      margin-bottom: 2.5rem;
+    }
+    .section-title em { font-style: italic; color: var(--teal); }
+
+    /* ── THRUST ROWS ── */
+    .thrust-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(26,92,69,0.15);
+      border-top: 2px solid var(--teal);
+      background: #fff;
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .thrust-row.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .thrust-text {
+      padding: 2.2rem;
+      border-right: 1px solid rgba(26,92,69,0.1);
+    }
+    .thrust-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.6rem;
+    }
+    .thrust-title {
+      font-size: 1.25rem;
+      font-weight: 400;
+      color: var(--dark);
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+    .thrust-body {
+      font-size: 0.97rem;
+      color: var(--mid);
+      line-height: 1.85;
+    }
+    .thrust-img {
+      background: #f0efe9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 220px;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #bbb;
+    }
+    .thrust-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Shared foundation — left border variant */
+    .foundation-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border: 1px solid rgba(26,92,69,0.2);
+      border-left: 3px solid var(--teal);
+      background: #fff;
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease 0.2s, transform 0.6s ease 0.2s;
+    }
+    .foundation-row.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .more-link {
+      display: block;
+      text-align: right;
+      margin-top: 1.8rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      text-decoration: none;
+    }
+    .more-link:hover { opacity: 0.6; }
+
+    /* ── NEWS ── */
+    .news-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 1.2rem;
+      padding: 1.1rem 0;
+      border-bottom: 1px solid rgba(26,92,69,0.1);
+      align-items: baseline;
+      opacity: 0;
+      transform: translateX(-12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .news-row.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .news-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--teal);
+    }
+    .news-text { font-size: 0.97rem; color: #3a3a35; }
+    .news-text strong { font-weight: 600; color: var(--dark); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      color: rgba(255,255,255,0.5);
+      padding: 2.5rem var(--pad);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+    }
+    footer a { color: rgba(255,255,255,0.5); text-decoration: none; }
+    footer a:hover { color: rgba(255,255,255,0.8); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .hero-top { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+      .hero-top img { width: 120px; }
+      .thrust-row, .foundation-row { grid-template-columns: 1fr; }
+      .thrust-text { border-right: none; border-bottom: 1px solid rgba(26,92,69,0.1); }
+      .thrust-img { min-height: 180px; }
+      nav { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="#research">Research</a>
+    <a href="people.html">People</a>
+    <a href="publications.html" class="dim">Publications</a>
+    <a href="join.html" class="dim">Join</a>
+  </nav>
+
+
+  <!-- HERO -->
+  <div id="hero">
+    <canvas id="particle-canvas"></canvas>
+    <div class="hero-inner">
+
+      <div class="hero-top">
+        <img src="logo.png" alt="CFT Lab logo" />
+        <h1>We study what happens to transport when <em>the flow changes the medium.</em></h1>
+      </div>
+
+      <div class="rule"></div>
+
+      <p class="hero-body">
+        Our research is built on a single observation: transport in systems with
+        flow-responsive boundaries and material properties cannot be described by
+        classical models, and closing this gap requires new physics across membrane
+        separation, biological flows, and complex mixing.
+      </p>
+
+      <p class="hero-caps">
+        Direct numerical simulations, coupled multiphysics, and scientific machine
+        learning &mdash; all realized on high-performance computing.
+      </p>
+
+    </div>
+  </div>
+
+
+  <!-- RESEARCH -->
+  <section id="research">
+    <div style="max-width:1060px;margin:0 auto;">
+      <p class="section-label">Research Program</p>
+      <h2 class="section-title">Two thrusts. <em>One physics.</em></h2>
+
+      <!-- Thrust I -->
+      <div class="thrust-row" data-reveal>
+        <div class="thrust-text">
+          <p class="thrust-label">Thrust I</p>
+          <h3 class="thrust-title">Bioflow &amp; Hemodynamics</h3>
+          <p class="thrust-body">
+            How does flow history activate, damage, or signal through blood-borne
+            macromolecules and cells &mdash; and what transport framework describes these
+            outcomes when classical advection-diffusion and stress-based models fail?
+          </p>
+        </div>
+        <div class="thrust-img">Figure &mdash; coming soon</div>
+      </div>
+
+      <!-- Thrust II -->
+      <div class="thrust-row" data-reveal style="transition-delay:0.1s;">
+        <div class="thrust-text">
+          <p class="thrust-label">Thrust II</p>
+          <h3 class="thrust-title">Flow-Coupled Functional Surfaces</h3>
+          <p class="thrust-body">
+            How does flow interact with functional surfaces &mdash; separative, reactive,
+            stimuli-responsive &mdash; to regulate transport and surface-mediated processes,
+            and how can that coupling be designed rather than merely optimized?
+          </p>
+        </div>
+        <div class="thrust-img">Figure &mdash; coming soon</div>
+      </div>
+
+      <!-- Shared Foundation -->
+      <div class="foundation-row" data-reveal>
+        <div class="thrust-text">
+          <p class="thrust-label">Shared Foundation</p>
+          <p class="thrust-body">
+            Beneath both thrusts: transport physics in variable-property,
+            high-Schmidt-number, and turbulent flow regimes &mdash;
+            viscosity-gradient-driven laminarization, turbulent mixing breakdown,
+            and extreme-regime scalar transport &mdash; where classical closure models
+            fail and new physical frameworks are required.
+          </p>
+        </div>
+        <div class="thrust-img">Figure &mdash; coming soon</div>
+      </div>
+
+      <a href="research.html" class="more-link">Full research overview &rarr;</a>
+    </div>
+  </section>
+
+
+  <!-- NEWS -->
+  <section id="news">
+    <div style="max-width:1060px;margin:0 auto;">
+      <p class="section-label">Latest</p>
+      <h2 class="section-title">News &amp; <em>Updates.</em></h2>
+
+      <div class="news-row" data-reveal>
+        <span class="news-date">Nov 2025</span>
+        <span class="news-text"><strong>APS Division of Fluid Dynamics</strong> &mdash; Abstract presented at the annual meeting</span>
+      </div>
+      <div class="news-row" data-reveal style="transition-delay:0.08s;">
+        <span class="news-date">Jul 2025</span>
+        <span class="news-text"><strong>17th U.S. National Congress on Computational Mechanics</strong> &mdash; Two abstracts presented</span>
+      </div>
+      <div class="news-row" data-reveal style="transition-delay:0.16s;">
+        <span class="news-date">Jun 2025</span>
+        <span class="news-text"><strong>ASME Summer Bioengineering Conference</strong> &mdash; SB3C, presentation at the annual meeting</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- FOOTER -->
+  <footer>
+    <span>Complex Flows and Advanced Transport Lab &nbsp;&middot;&nbsp; Cleveland State University</span>
+    <a href="mailto:m.usta@csuohio.edu">m.usta@csuohio.edu</a>
+  </footer>
+
+
+  <!-- LIVE PARTICLE ANIMATION -->
+  <script>
+  (function() {
+    var canvas = document.getElementById('particle-canvas');
+    var ctx    = canvas.getContext('2d');
+    var W, H, pts = [];
+    var TEAL = 'rgba(26,92,69,';
+
+    function resize() {
+      var hero = document.getElementById('hero');
+      W = canvas.width  = hero.offsetWidth;
+      H = canvas.height = hero.offsetHeight;
+    }
+
+    function Pt() { this.init(); }
+    Pt.prototype.init = function() {
+      this.x   = Math.random() * W;
+      this.y   = Math.random() * H;
+      this.vx  = (Math.random() - 0.5) * 0.45;
+      this.vy  = (Math.random() - 0.38) * 0.28;
+      this.age = 0;
+      this.max = 200 + Math.random() * 300;
+      this.r   = 0.7 + Math.random() * 1.4;
+    };
+    Pt.prototype.step = function() {
+      var t = this.x * 0.005 + this.y * 0.004;
+      this.vx += Math.cos(t + this.age * 0.011) * 0.013;
+      this.vy += Math.sin(t * 0.9 + this.age * 0.009) * 0.010;
+      this.vx *= 0.984; this.vy *= 0.984;
+      this.x  += this.vx; this.y += this.vy; this.age++;
+      if (this.age > this.max || this.x < -10 || this.x > W+10 ||
+          this.y < -10 || this.y > H+10) this.init();
+    };
+    Pt.prototype.draw = function() {
+      var a = Math.min(this.age/40,1) * Math.min((this.max-this.age)/40,1);
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, 6.2832);
+      ctx.fillStyle = TEAL + (a * 0.55) + ')';
+      ctx.fill();
+    };
+
+    function init() {
+      resize();
+      pts = [];
+      for (var i = 0; i < 240; i++) {
+        var p = new Pt();
+        p.age = Math.floor(Math.random() * p.max);
+        pts.push(p);
+      }
+    }
+
+    function loop() {
+      ctx.clearRect(0, 0, W, H);
+      for (var i = 0; i < pts.length; i++) {
+        for (var j = i+1; j < pts.length; j++) {
+          var dx = pts[i].x - pts[j].x;
+          var dy = pts[i].y - pts[j].y;
+          var d  = Math.sqrt(dx*dx + dy*dy);
+          if (d < 90) {
+            ctx.beginPath();
+            ctx.moveTo(pts[i].x, pts[i].y);
+            ctx.lineTo(pts[j].x, pts[j].y);
+            ctx.strokeStyle = TEAL + ((1 - d/90) * 0.08) + ')';
+            ctx.lineWidth = 0.7;
+            ctx.stroke();
+          }
+        }
+        pts[i].step();
+        pts[i].draw();
+      }
+      requestAnimationFrame(loop);
+    }
+
+    window.addEventListener('resize', function() {
+      resize();
+    });
+    init();
+    loop();
+  })();
+  </script>
+
+  <!-- SCROLL REVEAL -->
+  <script>
+  (function() {
+    var els = document.querySelectorAll('[data-reveal]');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    els.forEach(function(el) { observer.observe(el); });
+  })();
+  </script>
+
+</body>
+</html>

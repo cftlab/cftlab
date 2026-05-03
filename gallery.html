@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery &ndash; CFT Lab</title>
+  <meta name="description" content="Gallery of research visualizations, lab photos, and events from the Complex Flows and Advanced Transport Lab." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Gugi&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f7f6f2;
+      --accent: #2068a0;
+      --dark:   #1a1a18;
+      --mid:    #44443f;
+      --dim:    #74746f;
+      --orange: rgb(240,90,41);
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(32,104,160,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 7%; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none; transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.55; }
+    nav a.active { color: var(--orange); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 7% 3rem;
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-header .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 3.2vw, 3.4rem); font-weight: 300;
+      line-height: 1.15; color: var(--dark);
+    }
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 7%; }
+    section:nth-child(even) { background: #f0efe9; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 300;
+      color: var(--dark); margin-bottom: 2.8rem; line-height: 1.2;
+      border-bottom: 1px solid var(--rule); padding-bottom: 0.9rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* ── GALLERY GRID ── */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.4rem;
+    }
+    .gallery-item {
+      position: relative;
+      background: #fff;
+      border: 1px solid rgba(32,104,160,0.12);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .gallery-item:hover { border-color: rgba(32,104,160,0.35); }
+    .gallery-item img, .gallery-item video {
+      width: 100%; height: 240px; object-fit: cover; display: block;
+    }
+    .gallery-caption {
+      padding: 1rem 1.2rem;
+    }
+    .gallery-caption-title {
+      font-size: 1.05rem; font-weight: 400; color: var(--dark);
+      margin-bottom: 0.3rem;
+    }
+    .gallery-caption-desc {
+      font-size: 0.95rem; color: var(--dim); line-height: 1.6;
+    }
+    .gallery-caption-tag {
+      font-family: 'DM Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); margin-top: 0.5rem; display: inline-block;
+    }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 200;
+      background: rgba(26,26,24,0.92);
+      align-items: center; justify-content: center;
+      cursor: pointer;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img, .lightbox video {
+      max-width: 90vw; max-height: 85vh; object-fit: contain;
+      border-radius: 2px;
+    }
+    .lightbox-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      background: none; border: none;
+      font-size: 2rem; color: rgba(255,255,255,0.7);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .lightbox-close:hover { color: #fff; }
+    .lightbox-caption {
+      position: absolute; bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      font-family: 'DM Mono', monospace; font-size: 0.72rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+      text-align: center; max-width: 80vw;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-csu a { display: block; text-decoration: none; }
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
+    }
+    .footer-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.18); flex-shrink: 0; }
+    .footer-dept { text-align: center; flex: 1; }
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
+    }
+    .footer-dept a:hover { color: rgba(255,255,255,0.88); }
+    .footer-group img {
+      height: 52px; width: auto; opacity: 0.88; transition: opacity 0.2s;
+    }
+    .footer-group img:hover { opacity: 1; }
+
+    @media (max-width: 700px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="media-pub/logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
+    <a href="research.html">Research</a>
+    <a href="people.html">People</a>
+    <a href="publications.html">Publications</a>
+    <a href="notes.html">Notes</a>
+    <a href="gallery.html" class="active">Gallery</a>
+    <a href="join.html">Join</a>
+  </div>
+</nav>
+
+<div style="padding-top:54px; border-bottom:1px solid var(--rule);">
+  <div class="page-header">
+    <p class="section-label">Media</p>
+    <h1><em>Gallery.</em></h1>
+  </div>
+</div>
+
+<!-- ── RESEARCH VISUALIZATIONS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Simulations</p>
+    <h2 class="section-title">Research <em>Visualizations.</em></h2>
+    <div class="gallery-grid">
+
+      <div class="gallery-item" data-src="media-pub/pipeflow.png" data-type="img">
+        <img src="media-pub/pipeflow.png" alt="Red blood cells in channel flow" />
+        <div class="gallery-caption">
+          <p class="gallery-caption-title">Red blood cells in channel flow</p>
+          <p class="gallery-caption-desc">Particle-resolved simulation of deformable red blood cells in a confined channel.</p>
+          <span class="gallery-caption-tag">Thrust I</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-src="media-pub/desalination1.png" data-type="img">
+        <img src="media-pub/desalination1.png" alt="Concentration polarization" />
+        <div class="gallery-caption">
+          <p class="gallery-caption-title">Concentration polarization</p>
+          <p class="gallery-caption-desc">Schematic of concentration polarization at a membrane surface during separation.</p>
+          <span class="gallery-caption-tag">Thrust II</span>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-src="media-pub/turbulence.mp4" data-type="video">
+        <video src="media-pub/turbulence.mp4" muted playsinline loop></video>
+        <div class="gallery-caption">
+          <p class="gallery-caption-title">Turbulent flow structures</p>
+          <p class="gallery-caption-desc">Isosurface visualization of vortical structures in a turbulent flow field.</p>
+          <span class="gallery-caption-tag">Shared Foundation</span>
+        </div>
+      </div>
+
+      <!-- Add more items:
+      <div class="gallery-item" data-src="media-pub/filename.png" data-type="img">
+        <img src="media-pub/filename.png" alt="Description" />
+        <div class="gallery-caption">
+          <p class="gallery-caption-title">Title</p>
+          <p class="gallery-caption-desc">Description.</p>
+          <span class="gallery-caption-tag">Tag</span>
+        </div>
+      </div>
+      -->
+
+    </div>
+  </div>
+</section>
+
+<!-- ── GROUP PHOTOS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Lab Life</p>
+    <h2 class="section-title">Group <em>Photos.</em></h2>
+    <div class="gallery-grid">
+
+      <div class="gallery-item" data-src="media-pub/group_aps_dfd.jpeg" data-type="img">
+        <img src="media-pub/group_aps_dfd.jpeg" alt="CFT Lab at APS DFD" />
+        <div class="gallery-caption">
+          <p class="gallery-caption-title">APS Division of Fluid Dynamics, Nov 2024</p>
+          <p class="gallery-caption-desc">Mertcan Samgar, Sruthi Chengalrayan, and Dr. Usta at the APS DFD annual meeting.</p>
+        </div>
+      </div>
+
+      <div class="gallery-item" data-src="media-pub/group_lunch.jpeg" data-type="img">
+        <img src="media-pub/group_lunch.jpeg" alt="Lab lunch" />
+        <div class="gallery-caption">
+          <p class="gallery-caption-title">Lab lunch, Jul 2024</p>
+          <p class="gallery-caption-desc">Lab group lunch in Cleveland.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close">&times;</button>
+  <div id="lightbox-content"></div>
+  <div class="lightbox-caption" id="lightbox-caption"></div>
+</div>
+
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="media-pub/csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="media-pub/logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
+
+<script>
+(function() {
+  var lightbox = document.getElementById('lightbox');
+  var content  = document.getElementById('lightbox-content');
+  var caption  = document.getElementById('lightbox-caption');
+  var items    = document.querySelectorAll('.gallery-item');
+
+  items.forEach(function(item) {
+    item.addEventListener('click', function() {
+      var src  = item.getAttribute('data-src');
+      var type = item.getAttribute('data-type');
+      var title = item.querySelector('.gallery-caption-title');
+
+      content.innerHTML = '';
+      if (type === 'video') {
+        var v = document.createElement('video');
+        v.src = src; v.autoplay = true; v.loop = true; v.muted = true;
+        v.playsInline = true; v.controls = true;
+        content.appendChild(v);
+      } else {
+        var img = document.createElement('img');
+        img.src = src; img.alt = title ? title.textContent : '';
+        content.appendChild(img);
+      }
+      caption.textContent = title ? title.textContent : '';
+      lightbox.classList.add('open');
+    });
+
+    // Auto-play videos on hover in grid
+    var vid = item.querySelector('video');
+    if (vid) {
+      item.addEventListener('mouseenter', function() { vid.play(); });
+      item.addEventListener('mouseleave', function() { vid.pause(); vid.currentTime = 0; });
+    }
+  });
+
+  lightbox.addEventListener('click', function(e) {
+    if (e.target === lightbox || e.target.classList.contains('lightbox-close')) {
+      lightbox.classList.remove('open');
+      content.innerHTML = '';
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

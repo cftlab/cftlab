@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Join &ndash; CFT Lab</title>
+  <meta name="description" content="Open positions and opportunities at the Complex Flows and Advanced Transport Lab, Cleveland State University." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Gugi&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f7f6f2;
+      --accent: #2068a0;
+      --dark:   #1a1a18;
+      --mid:    #44443f;
+      --dim:    #74746f;
+      --orange: rgb(240,90,41);
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(32,104,160,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 7%; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none; transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.55; }
+    nav a.active { color: var(--orange); }
+    nav a.dim { color: var(--dim); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 7% 3rem;
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-header .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 3.2vw, 3.4rem); font-weight: 300;
+      line-height: 1.15; color: var(--dark);
+    }
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 7%; }
+    section:nth-child(even) { background: #f0efe9; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 300;
+      color: var(--dark); margin-bottom: 2.8rem; line-height: 1.2;
+      border-bottom: 1px solid var(--rule); padding-bottom: 0.9rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* ── POSITION CARD ── */
+    .position-card {
+      background: #fff;
+      border: 1px solid rgba(32,104,160,0.15);
+      border-top: 2px solid var(--accent);
+      padding: 2rem 2.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .position-level {
+      font-family: 'DM Mono', monospace; font-size: 0.70rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--orange); margin-bottom: 0.4rem;
+    }
+    .position-title {
+      font-size: 1.3rem; font-weight: 400; color: var(--dark);
+      margin-bottom: 0.8rem; line-height: 1.3;
+    }
+    .position-body {
+      font-size: 1.1rem; color: var(--mid); line-height: 1.85;
+    }
+
+    /* ── CONTACT ── */
+    .contact-block {
+      margin-top: 2rem; padding: 1.8rem 2.2rem;
+      background: #fff;
+      border: 1px solid rgba(32,104,160,0.15);
+      border-left: 3px solid var(--accent);
+    }
+    .contact-block p {
+      font-size: 1.1rem; color: var(--mid); line-height: 1.85;
+    }
+    .contact-block a {
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid rgba(32,104,160,0.25);
+      transition: opacity 0.2s;
+    }
+    .contact-block a:hover { opacity: 0.55; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-csu a { display: block; text-decoration: none; }
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
+    }
+    .footer-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.18); flex-shrink: 0; }
+    .footer-dept { text-align: center; flex: 1; }
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
+    }
+    .footer-dept a:hover { color: rgba(255,255,255,0.88); }
+    .footer-group img {
+      height: 52px; width: auto; opacity: 0.88; transition: opacity 0.2s;
+    }
+    .footer-group img:hover { opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="media-pub/logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
+    <a href="research.html">Research</a>
+    <a href="people.html">People</a>
+    <a href="publications.html">Publications</a>
+    <a href="notes.html">Notes</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="join.html" class="active">Join</a>
+  </div>
+</nav>
+
+<div style="padding-top:54px; border-bottom:1px solid var(--rule);">
+  <div class="page-header">
+    <p class="section-label">Opportunities</p>
+    <h1>Join the <em>Lab.</em></h1>
+  </div>
+</div>
+
+<!-- ── GRADUATE POSITIONS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Open Positions</p>
+    <h2 class="section-title">Graduate <em>Students.</em></h2>
+
+    <!-- Example position (copy this block for each opening):
+    <div class="position-card">
+      <p class="position-level">Ph.D. Position</p>
+      <h3 class="position-title">Title or research area</h3>
+      <p class="position-body">
+        Description of the position, expected background, and what the student will work on.
+      </p>
+    </div>
+    -->
+
+    <div class="position-card">
+      <p class="position-level">Ph.D. and M.S. Positions</p>
+      <h3 class="position-title">Open Positions in the CFT Lab</h3>
+      <p class="position-body">
+        The Complex Flows and Advanced Transport Lab is looking for motivated
+        graduate students interested in computational fluid dynamics, transport
+        phenomena, scientific machine learning, and high-performance computing.
+        Positions are available across all active research thrusts. Funded
+        positions include tuition coverage and a competitive stipend.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── UNDERGRADUATE RESEARCH ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Research Experiences</p>
+    <h2 class="section-title">Undergraduate <em>Researchers.</em></h2>
+    <div class="position-card">
+      <p class="position-level">Undergraduate</p>
+      <h3 class="position-title">Undergraduate Research Opportunities</h3>
+      <p class="position-body">
+        The lab welcomes undergraduate students interested in gaining research
+        experience in computational methods, data analysis, and transport
+        physics. No prior research experience is required.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HIGH SCHOOL RESEARCH ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Research Interns</p>
+    <h2 class="section-title">High School <em>Researchers.</em></h2>
+    <div class="position-card">
+      <p class="position-level">High School</p>
+      <h3 class="position-title">High School Research Internships</h3>
+      <p class="position-body">
+        The lab welcomes motivated high school students for research internships.
+        Interns work alongside graduate students on active research projects,
+        gaining hands-on experience in computational science and engineering research.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ── HOW TO APPLY ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">How to <em>Apply.</em></h2>
+    <div class="contact-block">
+      <p>
+        Interested candidates should email
+        <a href="mailto:m.usta@csuohio.edu">m.usta@csuohio.edu</a>
+        with a brief description of their research interests, a CV or resume,
+        and any relevant academic transcripts. Please include "CFT Lab &ndash;
+        Prospective Student" in the subject line.
+      </p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="media-pub/csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="media-pub/logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>

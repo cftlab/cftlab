@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>News &ndash; CFT Lab</title>
+  <meta name="description" content="News and updates from the Complex Flows and Advanced Transport Lab at Cleveland State University." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Gugi&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f7f6f2;
+      --accent: #2068a0;
+      --dark:   #1a1a18;
+      --mid:    #44443f;
+      --dim:    #74746f;
+      --orange: rgb(240,90,41);
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(32,104,160,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 7%; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none; transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.55; }
+    nav a.active { color: var(--orange); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 7% 3rem;
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-header .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 3.2vw, 3.4rem); font-weight: 300;
+      line-height: 1.15; color: var(--dark);
+    }
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 7%; }
+    section:nth-child(even) { background: #f0efe9; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .year-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--rule); padding-bottom: 0.6rem;
+    }
+
+    /* ── NEWS ROWS ── */
+    .news-row {
+      display: grid; grid-template-columns: 120px 1fr;
+      gap: 1.5rem; padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(32,104,160,0.08);
+      align-items: baseline;
+    }
+    .news-date {
+      font-family: 'DM Mono', monospace; font-size: 0.76rem;
+      color: var(--accent);
+    }
+    .news-text { font-size: 1.05rem; color: var(--mid); line-height: 1.7; }
+    .news-text strong { font-weight: 600; color: var(--dark); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-csu a { display: block; text-decoration: none; }
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
+    }
+    .footer-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.18); flex-shrink: 0; }
+    .footer-dept { text-align: center; flex: 1; }
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
+    }
+    .footer-dept a:hover { color: rgba(255,255,255,0.88); }
+    .footer-group img {
+      height: 52px; width: auto; opacity: 0.88; transition: opacity 0.2s;
+    }
+    .footer-group img:hover { opacity: 1; }
+
+    @media (max-width: 700px) {
+      .news-row { grid-template-columns: 90px 1fr; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="media-pub/logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
+    <a href="research.html">Research</a>
+    <a href="people.html">People</a>
+    <a href="publications.html">Publications</a>
+    <a href="notes.html">Notes</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="join.html">Join</a>
+  </div>
+</nav>
+
+<div style="padding-top:54px; border-bottom:1px solid var(--rule);">
+  <div class="page-header">
+    <p class="section-label">Lab Activity</p>
+    <h1>News &amp; <em>Updates.</em></h1>
+  </div>
+</div>
+
+<!-- ── 2026 ── -->
+<section>
+  <div class="section-inner">
+    <h2 class="year-label">2026</h2>
+
+    <div class="news-row">
+      <span class="news-date">Apr 2026</span>
+      <span class="news-text"><strong>New member</strong> &ndash; Brandon Tsirlin joins the lab as M.S. student</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2025 ── -->
+<section>
+  <div class="section-inner">
+    <h2 class="year-label">2025</h2>
+
+    <div class="news-row">
+      <span class="news-date">Nov 2025</span>
+      <span class="news-text"><strong>APS Division of Fluid Dynamics</strong> &ndash; Four presentations at the annual meeting (Oztekin et al., Prince et al., Samgar et al., Daskiran et al.)</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">Jul 2025</span>
+      <span class="news-text"><strong>17th U.S. National Congress on Computational Mechanics</strong> &ndash; Two abstracts presented</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">Jun 2025</span>
+      <span class="news-text"><strong>ASME Summer Bioengineering Conference (SB3C)</strong> &ndash; Presentation at the annual meeting</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2025</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Turkyilmaz et al. published in Renewable Energy</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2025</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Prince et al. published in Desalination</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2025</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Prince et al. published in Separation and Purification Technology</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2025</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Oztekin et al. published in Physical Review E</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">Apr 2025</span>
+      <span class="news-text"><strong>Patent</strong> &ndash; US Patent Application filed for off-grid turbine-driven centrifugal reverse osmosis system (Daskiran &amp; Usta)</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">May 2025</span>
+      <span class="news-text"><strong>New member</strong> &ndash; Marijo Vukancic joins the lab as M.S. student</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">Jan 2025</span>
+      <span class="news-text"><strong>New member</strong> &ndash; Syed Umair Ahmed joins the lab as M.S. student</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2024 ── -->
+<section>
+  <div class="section-inner">
+    <h2 class="year-label">2024</h2>
+
+    <div class="news-row">
+      <span class="news-date">Nov 2024</span>
+      <span class="news-text"><strong>APS Division of Fluid Dynamics</strong> &ndash; Four presentations at the annual meeting (Samgar et al., Prince et al., Chengalrayan &amp; Usta, Turkyilmaz et al.)</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2023 ── -->
+<section>
+  <div class="section-inner">
+    <h2 class="year-label">2023</h2>
+
+    <div class="news-row">
+      <span class="news-date">Nov 2023</span>
+      <span class="news-text"><strong>APS Division of Fluid Dynamics</strong> &ndash; Three presentations at the annual meeting (Usta et al., Oztekin et al., Prince et al.)</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">Aug 2023</span>
+      <span class="news-text"><strong>New members</strong> &ndash; Saugat Upreti and Sruthi Chengalrayan join the lab as Ph.D. students</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2023</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Usta et al. published in Journal of Fluid Mechanics</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2023</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Ahmad et al. published in Chemical Engineering Science</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2023</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Zhang et al. published in Chemical Engineering Science</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">Jan 2023</span>
+      <span class="news-text"><strong>New member</strong> &ndash; Mertcan Samgar joins the lab as Ph.D. student</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── 2022 ── -->
+<section>
+  <div class="section-inner">
+    <h2 class="year-label">2022</h2>
+
+    <div class="news-row">
+      <span class="news-date">Oct 2022</span>
+      <span class="news-text"><strong>Society of Rheology</strong> &ndash; Presentation at the 93rd Annual Meeting, Chicago (Ahmad et al.)</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2022</span>
+      <span class="news-text"><strong>Lab founded</strong> &ndash; CFT Lab established at Cleveland State University</span>
+    </div>
+    <div class="news-row">
+      <span class="news-date">2022</span>
+      <span class="news-text"><strong>Publication</strong> &ndash; Le et al. published in Fluids</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="media-pub/csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="media-pub/logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>

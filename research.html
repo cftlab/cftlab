@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research &ndash; CFT Lab</title>
+  <meta name="description" content="Research program of the Complex Flows and Advanced Transport Lab. Bioflow, hemodynamics, functional surfaces, membrane separation, turbulent mixing, and scientific machine learning." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Gugi&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f7f6f2;
+      --accent: #2068a0;
+      --dark:   #1a1a18;
+      --mid:    #44443f;
+      --dim:    #74746f;
+      --orange: rgb(240,90,41);
+      --green:  #3a8a5c;
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(32,104,160,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 7%; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none; transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.55; }
+    nav a.active { color: var(--orange); }
+    nav a.dim { color: var(--dim); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 7% 3rem;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-header .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 3.2vw, 3.4rem); font-weight: 300;
+      line-height: 1.15; color: var(--dark); margin-bottom: 1rem;
+    }
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+    .page-header .intro {
+      font-size: 1.15rem; color: var(--mid); max-width: 720px; line-height: 1.85;
+    }
+
+    /* ── NETWORK SECTION ── */
+    .network-section {
+      padding: 0 7% 3rem;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .map-container {
+      position: relative;
+      border: 1px solid var(--rule);
+      background: #fff;
+    }
+    #network-canvas {
+      display: block; width: 100%; height: 58vh; min-height: 400px;
+      cursor: default;
+    }
+    .map-legend {
+      position: absolute; top: 1.2rem; left: 0; right: 0;
+      display: flex; justify-content: space-between;
+      padding: 0 5%;
+    }
+    .legend-item {
+      font-family: 'DM Mono', monospace; font-size: 0.70rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .legend-dot {
+      width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+    }
+    .legend-dot.t1 { background: var(--accent); }
+    .legend-dot.t2 { background: var(--orange); }
+    .legend-dot.sf { background: var(--green); }
+    .map-hint {
+      position: absolute; bottom: 1rem; right: 1.5rem;
+      font-family: 'DM Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--dim); opacity: 0.7;
+    }
+
+    /* ── DETAIL PANEL ── */
+    .detail-panel {
+      max-height: 0; overflow: hidden; opacity: 0;
+      transition: max-height 0.45s ease, opacity 0.35s ease, padding 0.35s ease;
+      border: 1px solid var(--rule); border-top: none;
+      background: #fff;
+    }
+    .detail-panel.open {
+      max-height: 500px; opacity: 1;
+    }
+    .detail-inner {
+      padding: 2rem 2.4rem;
+      position: relative;
+    }
+    .detail-main {}
+    .detail-thrust-badge {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      margin-bottom: 0.4rem; display: inline-block;
+      padding: 0.15rem 0.6rem; border-radius: 2px;
+    }
+    .detail-thrust-badge.t1 { color: var(--accent); border: 1px solid rgba(32,104,160,0.3); }
+    .detail-thrust-badge.t2 { color: var(--orange); border: 1px solid rgba(240,90,41,0.3); }
+    .detail-thrust-badge.sf { color: var(--green); border: 1px solid rgba(58,138,92,0.3); }
+    .detail-title {
+      font-size: 1.5rem; font-weight: 400; color: var(--dark);
+      margin-bottom: 0.8rem; line-height: 1.25;
+    }
+    .detail-desc {
+      font-size: 1.1rem; color: var(--mid); line-height: 1.85;
+    }
+    .detail-close {
+      position: absolute; top: 0.8rem; right: 1rem;
+      background: none; border: none; font-size: 1.4rem;
+      color: var(--dim); cursor: pointer; line-height: 1;
+      transition: color 0.2s;
+    }
+    .detail-close:hover { color: var(--dark); }
+
+    /* ── SUPPORT SECTION ── */
+    .support-section {
+      padding: 4rem 7%; background: #f0efe9;
+      border-top: 1px solid var(--rule);
+    }
+    .support-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;
+    }
+    .support-block {}
+    .support-block h3 {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 1.2rem;
+    }
+    .support-list {
+      list-style: none; display: flex; flex-direction: column; gap: 0.6rem;
+    }
+    .support-list li {
+      font-size: 1.1rem; color: var(--mid); padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(32,104,160,0.08);
+    }
+    .support-list li:last-child { border-bottom: none; }
+    .logo-row {
+      display: flex; align-items: center; gap: 2.5rem; flex-wrap: wrap;
+      margin-top: 0.8rem;
+    }
+    .logo-row img {
+      height: 38px; width: auto; opacity: 0.7;
+      filter: grayscale(40%);
+      transition: opacity 0.2s, filter 0.2s;
+    }
+    .logo-row img:hover { opacity: 1; filter: grayscale(0%); }
+    .logo-row img.invert { filter: grayscale(40%) invert(1); }
+    .logo-row img.invert:hover { filter: grayscale(0%) invert(1); }
+    .logo-row img.tall { height: 50px; }
+
+    @media (max-width: 700px) {
+      .support-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-csu a { display: block; text-decoration: none; }
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
+    }
+    .footer-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.18); flex-shrink: 0; }
+    .footer-dept { text-align: center; flex: 1; }
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
+    }
+    .footer-dept a:hover { color: rgba(255,255,255,0.88); }
+    .footer-group img {
+      height: 52px; width: auto; opacity: 0.88; transition: opacity 0.2s;
+    }
+    .footer-group img:hover { opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .detail-inner { grid-template-columns: 1fr; }
+      #network-canvas { height: 45vh; min-height: 320px; }
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="media-pub/logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
+    <a href="index.html#research" class="active">Research</a>
+    <a href="people.html">People</a>
+    <a href="publications.html">Publications</a>
+    <a href="notes.html">Notes</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="join.html">Join</a>
+  </div>
+</nav>
+
+<div style="padding-top:54px;">
+  <div class="page-header">
+    <p class="section-label">Research Program</p>
+    <h1>Research <em>Network.</em></h1>
+    <p class="intro">
+      Our research program is interconnected by design. Projects span biological flows,
+      membrane separation, reactive surfaces, and turbulent mixing, sharing methods,
+      physics, and investigators. Explore the network below.
+    </p>
+  </div>
+</div>
+
+<div class="network-section">
+  <div class="map-container">
+    <canvas id="network-canvas"></canvas>
+    <div class="map-legend">
+      <span class="legend-item"><span class="legend-dot t1"></span> Bioflow &amp; Hemodynamics</span>
+      <span class="legend-item"><span class="legend-dot sf"></span> Foundation &amp; Methods</span>
+      <span class="legend-item"><span class="legend-dot t2"></span> Functional Surfaces</span>
+    </div>
+    <span class="map-hint">Click a node to explore</span>
+  </div>
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-inner" style="position:relative;">
+      <div class="detail-main">
+        <span class="detail-thrust-badge" id="detail-badge"></span>
+        <h3 class="detail-title" id="detail-title"></h3>
+        <p class="detail-desc" id="detail-desc"></p>
+      </div>
+      <button class="detail-close" id="detail-close">&times;</button>
+    </div>
+  </div>
+</div>
+
+<section class="support-section">
+  <div class="support-inner">
+    <div class="support-block">
+      <h3>Funding</h3>
+      <div class="logo-row">
+        <img src="media-pub/logo_doe.svg" alt="U.S. Department of Energy" class="tall invert" />
+      </div>
+    </div>
+    <div class="support-block">
+      <h3>Collaborations</h3>
+      <div class="logo-row">
+        <img src="media-pub/logo_binghamton.png" alt="Binghamton University" class="invert" />
+        <img src="media-pub/logo_gatech.svg" alt="Georgia Institute of Technology" class="invert" />
+        <img src="media-pub/logo_lehigh.png" alt="Lehigh University" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="media-pub/csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="media-pub/logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
+
+<script>
+(function() {
+  /* ── DATA ── */
+  var THRUST_COLORS = {
+    1: [32,104,160],   // blue
+    2: [240,90,41],    // orange
+    0: [58,138,92]     // green
+  };
+  var THRUST_NAMES = {
+    1: 'Bioflow & Hemodynamics',
+    2: 'Flow-Coupled Functional Surfaces',
+    0: 'Foundation & Methods'
+  };
+  var THRUST_CLASS = { 1: 't1', 2: 't2', 0: 'sf' };
+
+  var NODES = [
+    // Thrust I
+    { id: 'vwf',     label: 'vWF Activation',         thrust: 1, nx: 0.16, ny: 0.20, r: 24,
+      title: 'Macromolecular Activation and Conformational Dynamics',
+      desc: 'Von Willebrand factor is a blood protein whose biological function depends on mechanical unfolding driven by flow. We develop data-driven and mechanistic models for vWF activation and conformational dynamics, connecting flow-history-dependent mechanical exposure to biological outcomes including thrombosis and bleeding disorders.',
+      students: ['Saugat Upreti (Ph.D.)', 'Sruthi Chengalrayan (Ph.D.)'] },
+
+    { id: 'rbc',     label: 'Cell Mechanics',          thrust: 1, nx: 0.10, ny: 0.48, r: 20,
+      title: 'Cellular Deformation and Damage in Flow',
+      desc: 'Red blood cells deform, orient, and sustain damage in response to local and accumulated flow conditions. We study cellular deformation and damage in physiological and device-relevant shear and extensional flows using particle-resolved simulation methods.',
+      students: ['Syed Umair Ahmed (M.S.)'] },
+
+    { id: 'ev',      label: 'EV Transport',            thrust: 1, nx: 0.24, ny: 0.40, r: 19,
+      title: 'Extracellular Vesicle Transport and Signaling',
+      desc: 'Extracellular vesicles carry signaling molecules between cells, but their transport, margination, and uptake depend on hemodynamic conditions. We study how flow environments govern EV-mediated intercellular signaling, including interactions with vWF under physiological and pathological conditions.',
+      students: ['Sruthi Chengalrayan (Ph.D.)'] },
+
+    { id: 'cardio',  label: 'Cardiovascular Flows',    thrust: 1, nx: 0.18, ny: 0.65, r: 18,
+      title: 'Cardiovascular Hemodynamics and Device Flows',
+      desc: 'Cardiovascular disease and medical devices such as ventricular assist devices and heart valves create complex hemodynamic environments. We study how these flow conditions drive macromolecular activation, cellular damage, and thrombotic risk, connecting our molecular and cellular-level work to clinical-scale flows.',
+      students: [] },
+
+    // Thrust II
+    { id: 'cro',     label: 'Centrifugal RO',          thrust: 2, nx: 0.82, ny: 0.22, r: 22,
+      title: 'Centrifugal Reverse Osmosis',
+      desc: 'Centrifugal reverse osmosis replaces hydraulic pressure with centrifugal acceleration to drive membrane separation for water desalination. We study the fundamental flow physics governing separation performance in these systems, including the interplay between rotation, concentration polarization, and membrane response.',
+      students: ['Mertcan Samgar (Ph.D.)'] },
+
+    { id: 'membrane', label: 'Membrane Transport',     thrust: 2, nx: 0.76, ny: 0.48, r: 20,
+      title: 'Membrane Polarization and Fouling Dynamics',
+      desc: 'Concentration polarization, temperature polarization, and fouling govern membrane performance through bidirectional coupling between flow structure and surface response. We develop transport models that account for this coupling and its dependence on flow history, spanning desalination and bioseparation applications.',
+      students: [] },
+
+    { id: 'reactive', label: 'Reactive Surfaces',      thrust: 2, nx: 0.88, ny: 0.42, r: 17,
+      title: 'Stimuli-Responsive and Catalytic Surfaces',
+      desc: 'Stimuli-responsive and catalytic surfaces actively respond to local flow and chemical conditions, creating coupled flow-surface transport problems. We study how this coupling regulates surface-mediated processes across reactive and separative applications.',
+      students: [] },
+
+    // Shared Foundation
+    { id: 'ml',      label: 'Scientific ML',           thrust: 0, nx: 0.50, ny: 0.18, r: 22,
+      title: 'Scientific Machine Learning for Transport',
+      desc: 'We develop physics-constrained neural operators, graph neural networks for flow topology embedding, and data-driven frameworks for macromolecular activation and conformational dynamics. These methods accelerate transport discovery and enable predictive modeling across scales, serving both thrusts.',
+      students: ['Saugat Upreti (Ph.D.)'] },
+
+    { id: 'prs',     label: 'Particle-Resolved\nSimulation', thrust: 0, nx: 0.34, ny: 0.48, r: 19,
+      title: 'Particle-Resolved Simulation Methods',
+      desc: 'We develop particle-resolved simulation methods for deformable cells and macromolecules in complex flow environments, resolving individual particle-flow interactions at scales where continuum approaches cannot capture the relevant physics. These methods underpin our Thrust I work on blood cells and macromolecules.',
+      students: ['Syed Umair Ahmed (M.S.)'] },
+
+    { id: 'scalar',  label: 'Scalar Transport',        thrust: 0, nx: 0.54, ny: 0.52, r: 17,
+      title: 'High-Schmidt-Number Scalar Transport',
+      desc: 'When molecular diffusion is far slower than momentum diffusion, extreme thin concentration boundary layers form that challenge both simulation and modeling. This transport regime is fundamental to both membrane separation and biological transport, and connects our foundation work to both applied thrusts.',
+      students: [] },
+
+    { id: 'turb',    label: 'Variable-Property\nTurbulence', thrust: 0, nx: 0.40, ny: 0.76, r: 20,
+      title: 'Variable-Property Turbulence and Viscosity-Gradient Dynamics',
+      desc: 'When material properties vary across a turbulent flow, the resulting viscosity gradients drive laminarization and fundamentally alter transport. We study these effects through large-eddy and direct numerical simulation, developing the physical understanding that classical turbulence closure models lack in these regimes.',
+      students: ['Marijo Vukancic (M.S.)'] },
+
+    { id: 'comp',    label: 'Compressible Mixing',     thrust: 0, nx: 0.64, ny: 0.78, r: 18,
+      title: 'Compressible Mixing and Shock-Surface Interactions',
+      desc: 'Turbulent mixing in compressible flows, including shock-surface interactions, presents transport challenges distinct from incompressible regimes. We study mixing and transport in high-speed flow environments where density, temperature, and viscosity vary strongly across the flow field.',
+      students: ['Marijo Vukancic (M.S.)'] }
+  ];
+
+  var EDGES = [
+    // Within Thrust I
+    ['vwf',  'rbc'],
+    ['vwf',  'ev'],
+    ['vwf',  'cardio'],
+    ['rbc',  'cardio'],
+    ['ev',   'cardio'],
+    ['rbc',  'ev'],
+    // Within Thrust II
+    ['cro',      'membrane'],
+    ['membrane', 'reactive'],
+    ['cro',      'reactive'],
+    // Cross: Thrust I  <->  Foundation
+    ['vwf',    'ml'],
+    ['vwf',    'prs'],
+    ['rbc',    'prs'],
+    ['ev',     'prs'],
+    ['cardio', 'turb'],
+    // Cross: Thrust II <->  Foundation
+    ['cro',      'ml'],
+    ['membrane', 'scalar'],
+    ['cro',      'turb'],
+    ['reactive', 'scalar'],
+    // Within Foundation
+    ['turb',   'scalar'],
+    ['turb',   'comp'],
+    ['scalar', 'comp'],
+    ['ml',     'turb'],
+    ['ml',     'scalar'],
+    ['ml',     'prs'],
+    // Cross: Thrust I <-> Thrust II (via shared physics)
+    ['membrane', 'prs']
+  ];
+
+  /* ── CANVAS SETUP ── */
+  var canvas = document.getElementById('network-canvas');
+  var ctx    = canvas.getContext('2d');
+  var W, H, dpr;
+  var nodes = [], nodeMap = {};
+  var selected = null, hovered = null;
+  var time = 0;
+
+  function rgba(c, a) { return 'rgba('+c[0]+','+c[1]+','+c[2]+','+a+')'; }
+
+  function buildNodes() {
+    nodes = NODES.map(function(n) {
+      var obj = {
+        id: n.id, label: n.label, thrust: n.thrust,
+        x: n.nx * W, y: n.ny * H,
+        r: n.r * (W / 1100),
+        phase: Math.random() * Math.PI * 2,
+        title: n.title, desc: n.desc, students: n.students
+      };
+      nodeMap[n.id] = obj;
+      return obj;
+    });
+  }
+
+  function getConnected(id) {
+    var set = {};
+    EDGES.forEach(function(e) {
+      if (e[0] === id) set[e[1]] = true;
+      if (e[1] === id) set[e[0]] = true;
+    });
+    return set;
+  }
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    W = canvas.offsetWidth;
+    H = canvas.offsetHeight;
+    canvas.width  = W * dpr;
+    canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    nodeMap = {};
+    buildNodes();
+  }
+
+  /* ── DRAWING ── */
+  function drawEdges() {
+    var activeId = selected ? selected.id : (hovered ? hovered.id : null);
+    var conn = activeId ? getConnected(activeId) : null;
+
+    EDGES.forEach(function(e) {
+      var a = nodeMap[e[0]], b = nodeMap[e[1]];
+      if (!a || !b) return;
+
+      var isActive = activeId && (e[0] === activeId || e[1] === activeId);
+      var alpha = activeId ? (isActive ? 0.45 : 0.06) : 0.14;
+      var width = isActive ? 2.0 : 1.0;
+
+      // Edge color: blend the two node colors
+      var ca = THRUST_COLORS[a.thrust], cb = THRUST_COLORS[b.thrust];
+      var cm = [Math.round((ca[0]+cb[0])/2), Math.round((ca[1]+cb[1])/2), Math.round((ca[2]+cb[2])/2)];
+
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.strokeStyle = rgba(cm, alpha);
+      ctx.lineWidth = width;
+      ctx.stroke();
+    });
+  }
+
+  function drawNodes() {
+    var activeId = selected ? selected.id : (hovered ? hovered.id : null);
+    var conn = activeId ? getConnected(activeId) : null;
+
+    nodes.forEach(function(n) {
+      var c = THRUST_COLORS[n.thrust];
+      var breath = 1 + 0.04 * Math.sin(time * 1.5 + n.phase);
+      var r = n.r * breath;
+
+      var isThis = activeId && n.id === activeId;
+      var isConn = conn && conn[n.id];
+      var dimmed = activeId && !isThis && !isConn;
+
+      var bodyAlpha = dimmed ? 0.15 : 1.0;
+      var glowAlpha = dimmed ? 0.03 : (isThis ? 0.22 : 0.12);
+
+      // Glow
+      var g = ctx.createRadialGradient(n.x, n.y, r * 0.3, n.x, n.y, r * 2.8);
+      g.addColorStop(0, rgba(c, glowAlpha));
+      g.addColorStop(1, rgba(c, 0));
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r * 2.8, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      // Body
+      var bg = ctx.createRadialGradient(n.x - r*0.25, n.y - r*0.25, r*0.05, n.x, n.y, r);
+      bg.addColorStop(0, rgba([Math.min(c[0]+40,255), Math.min(c[1]+40,255), Math.min(c[2]+40,255)], bodyAlpha));
+      bg.addColorStop(1, rgba(c, bodyAlpha));
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+      ctx.fillStyle = bg;
+      ctx.fill();
+
+      // Specular
+      if (!dimmed) {
+        var sp = ctx.createRadialGradient(n.x - r*0.3, n.y - r*0.3, 0, n.x - r*0.25, n.y - r*0.25, r*0.5);
+        sp.addColorStop(0, 'rgba(255,255,255,0.6)');
+        sp.addColorStop(1, 'rgba(255,255,255,0)');
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = sp;
+        ctx.fill();
+      }
+
+      // Selection ring
+      if (isThis) {
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, r + 4, 0, Math.PI * 2);
+        ctx.strokeStyle = rgba(c, 0.5);
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+    });
+  }
+
+  function drawLabels() {
+    var activeId = selected ? selected.id : (hovered ? hovered.id : null);
+    var conn = activeId ? getConnected(activeId) : null;
+
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+
+    nodes.forEach(function(n) {
+      var dimmed = activeId && n.id !== activeId && !(conn && conn[n.id]);
+      var alpha = dimmed ? 0.2 : 0.85;
+
+      ctx.font = '500 ' + Math.max(9, 10 * (W/1100)) + 'px "DM Mono", monospace';
+      ctx.fillStyle = 'rgba(26,26,24,' + alpha + ')';
+
+      var lines = n.label.split('\n');
+      var lineH = Math.max(11, 12 * (W/1100));
+      var yOff  = n.r * (1 + 0.04 * Math.sin(time * 1.5 + n.phase)) + 8;
+
+      lines.forEach(function(line, i) {
+        ctx.fillText(line, n.x, n.y + yOff + i * lineH);
+      });
+    });
+  }
+
+  function frame() {
+    time += 0.016;
+    ctx.clearRect(0, 0, W, H);
+    drawEdges();
+    drawNodes();
+    drawLabels();
+    requestAnimationFrame(frame);
+  }
+
+  /* ── INTERACTION ── */
+  function hitTest(mx, my) {
+    for (var i = nodes.length - 1; i >= 0; i--) {
+      var n = nodes[i];
+      var dx = mx - n.x, dy = my - n.y;
+      if (dx*dx + dy*dy < (n.r + 6) * (n.r + 6)) return n;
+    }
+    return null;
+  }
+
+  canvas.addEventListener('mousemove', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    var hit = hitTest(mx, my);
+    hovered = hit;
+    canvas.style.cursor = hit ? 'pointer' : 'default';
+  });
+
+  canvas.addEventListener('click', function(e) {
+    var rect = canvas.getBoundingClientRect();
+    var mx = e.clientX - rect.left, my = e.clientY - rect.top;
+    var hit = hitTest(mx, my);
+
+    if (hit) {
+      selected = hit;
+      showDetail(hit);
+    } else {
+      selected = null;
+      hideDetail();
+    }
+  });
+
+  canvas.addEventListener('mouseleave', function() {
+    hovered = null;
+  });
+
+  /* ── DETAIL PANEL ── */
+  var panel = document.getElementById('detail-panel');
+
+  function showDetail(n) {
+    var badge = document.getElementById('detail-badge');
+    badge.textContent = THRUST_NAMES[n.thrust];
+    badge.className = 'detail-thrust-badge ' + THRUST_CLASS[n.thrust];
+
+    document.getElementById('detail-title').textContent = n.title;
+    document.getElementById('detail-desc').textContent = n.desc;
+
+    panel.classList.add('open');
+  }
+
+  function hideDetail() {
+    panel.classList.remove('open');
+  }
+
+  document.getElementById('detail-close').addEventListener('click', function() {
+    selected = null;
+    hideDetail();
+  });
+
+  /* ── INIT ── */
+  window.addEventListener('resize', resize);
+  resize();
+  frame();
+})();
+</script>
+
+</body>
+</html>

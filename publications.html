@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publications &ndash; CFT Lab</title>
+  <meta name="description" content="Publications from the Complex Flows and Advanced Transport Lab at Cleveland State University." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Mono:wght@300;400&family=Gugi&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:     #f7f6f2;
+      --accent: #2068a0;
+      --dark:   #1a1a18;
+      --mid:    #44443f;
+      --dim:    #74746f;
+      --orange: rgb(240,90,41);
+      --gray57: rgb(90,91,92);
+      --rule:   rgba(32,104,160,0.12);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 400;
+      line-height: 1.75;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(247,246,242,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--rule);
+      padding: 0 7%; height: 54px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; text-decoration: none; flex-shrink: 0; }
+    .nav-logo img { height: 38px; width: auto; }
+    .nav-links { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'DM Mono', monospace; font-size: 0.78rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none; transition: opacity 0.2s;
+    }
+    nav a:hover { opacity: 0.55; }
+    nav a.active { color: var(--orange); }
+    nav a.dim { color: var(--dim); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 7rem 7% 3rem;
+      border-bottom: 1px solid var(--rule);
+      max-width: 1100px; margin: 0 auto;
+    }
+    .page-header .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .page-header h1 {
+      font-size: clamp(2rem, 3.2vw, 3.4rem); font-weight: 300;
+      line-height: 1.15; color: var(--dark);
+    }
+    .page-header h1 em { font-style: italic; color: var(--accent); }
+
+    /* ── SECTIONS ── */
+    section { padding: 4.5rem 7%; }
+    section:nth-child(even) { background: #f0efe9; }
+    .section-inner { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.5rem, 2vw, 2rem); font-weight: 300;
+      color: var(--dark); margin-bottom: 2.8rem; line-height: 1.2;
+      border-bottom: 1px solid var(--rule); padding-bottom: 0.9rem;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+
+    /* ── PUBLICATION ENTRY ── */
+    .pub-entry {
+      padding: 1.2rem 0;
+      border-bottom: 1px solid rgba(32,104,160,0.08);
+    }
+    .pub-entry:last-child { border-bottom: none; }
+    .pub-authors {
+      font-size: 1.0rem; color: var(--mid); margin-bottom: 0.2rem;
+    }
+    .pub-title {
+      font-size: 1.15rem; font-weight: 400; color: var(--dark);
+      margin-bottom: 0.2rem;
+    }
+    .pub-venue {
+      font-size: 1.0rem; font-style: italic; color: var(--dim);
+    }
+    .pub-links {
+      margin-top: 0.4rem;
+    }
+    .pub-links a {
+      font-family: 'DM Mono', monospace; font-size: 0.68rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--accent); text-decoration: none;
+      border-bottom: 1px solid rgba(32,104,160,0.25);
+      padding-bottom: 1px; margin-right: 1.2rem;
+      transition: opacity 0.2s;
+    }
+    .pub-links a:hover { opacity: 0.55; }
+
+    /* ── PLACEHOLDER ── */
+    .placeholder {
+      font-size: 1.1rem; color: var(--dim); font-style: italic;
+      padding: 2rem 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      padding: 2.6rem 7%;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1.5rem; flex-wrap: wrap;
+    }
+    .footer-csu a { display: block; text-decoration: none; }
+    .footer-csu img {
+      height: 46px; width: auto;
+      background: rgba(255,255,255,0.93); padding: 5px 12px; border-radius: 3px;
+      display: block;
+    }
+    .footer-divider { width: 1px; height: 52px; background: rgba(255,255,255,0.18); flex-shrink: 0; }
+    .footer-dept { text-align: center; flex: 1; }
+    .footer-dept a {
+      font-family: 'DM Mono', monospace; font-size: 0.74rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,0.55); text-decoration: none;
+      transition: color 0.2s; line-height: 1.5;
+    }
+    .footer-dept a:hover { color: rgba(255,255,255,0.88); }
+    .footer-group img {
+      height: 52px; width: auto; opacity: 0.88; transition: opacity 0.2s;
+    }
+    .footer-group img:hover { opacity: 1; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      footer { flex-direction: column; align-items: flex-start; }
+      .footer-divider { display: none; }
+      .footer-dept { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">
+    <img src="media-pub/logo.png" alt="CFT Lab" />
+  </a>
+  <div class="nav-links">
+    <a href="research.html">Research</a>
+    <a href="people.html">People</a>
+    <a href="publications.html" class="active">Publications</a>
+    <a href="notes.html">Notes</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="join.html">Join</a>
+  </div>
+</nav>
+
+<div style="padding-top:54px; border-bottom:1px solid var(--rule);">
+  <div class="page-header">
+    <p class="section-label">Output</p>
+    <h1>Publications.</h1>
+  </div>
+</div>
+
+<!-- ── JOURNAL ARTICLES ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Peer-Reviewed</p>
+    <h2 class="section-title">Journal <em>Articles.</em></h2>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Turkyilmaz A, Prince HA, Usta M, Banerjee A, Daskiran C</p>
+      <p class="pub-title">Impact of a downstream cylindrical centrifugal reverse osmosis module on tidal turbine performance and wake recovery</p>
+      <p class="pub-venue">Renewable Energy, 124806, 2025</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.renene.2025.124806" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Prince HA, Usta M, Daskiran C</p>
+      <p class="pub-title">Energy-efficient multi-stage reverse osmosis modules: A viable competitor to centrifugal reverse osmosis?</p>
+      <p class="pub-venue">Desalination, 613, 119035, 2025</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.desal.2025.119035" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Prince HA, Usta M, Daskiran C</p>
+      <p class="pub-title">Centrifugal reverse osmosis: A novel energy-efficient desalination approach with mass transfer-controlled analysis</p>
+      <p class="pub-venue">Separation and Purification Technology, 134437, 2025</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.seppur.2025.134437" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Oztekin DE, Usta M, Aidun CK</p>
+      <p class="pub-title">Conformational behavior of von Willebrand factor in response to regions of high shear and extension rates in converging or diverging pipes</p>
+      <p class="pub-venue">Physical Review E, 112(1), 015410, 2025</p>
+      <div class="pub-links"><a href="https://doi.org/10.1103/bp6b-8j2q" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Ahmad MRC, Pathikonda G, Khan I, Gillis P, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Coaxial jets with disparate viscosity: mixing and laminarization characteristics</p>
+      <p class="pub-venue">Journal of Fluid Mechanics, 955, A43, 2023</p>
+      <div class="pub-links"><a href="https://doi.org/10.1017/jfm.2022.1076" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Ahmad MRC, Usta M, Pathikonda G, Khan I, Gillis P, Dhodapkar S, Jain P, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Inline spectroscopic measurements and LES of competitive consecutive reaction in a confined liquid jet in coflow</p>
+      <p class="pub-venue">Chemical Engineering Science, 268, 118375, 2023</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.ces.2022.118375" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Zhang B, Usta M, Khan I, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Chemically reacting mixing in coaxial miscible liquid jets under variable viscosities and reaction rates</p>
+      <p class="pub-venue">Chemical Engineering Science, 268, 118412, 2023</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.ces.2022.118412" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Le TB, Usta M, Aidun CK, Yoganathan A, Sotiropoulos F</p>
+      <p class="pub-title">Computational methods for fluid-structure interaction simulation of heart valves in patient-specific left heart anatomies</p>
+      <p class="pub-venue">Fluids, 7(3), 94, 2022</p>
+      <div class="pub-links"><a href="https://doi.org/10.3390/fluids7030094" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Pathikonda G, Usta M, Ahmad MC, Khan I, Gillis P, Dhodapkar S, Jain P, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Mixing behavior in a confined jet with disparate viscosity and implications for complex reactions</p>
+      <p class="pub-venue">Chemical Engineering Journal, 403, 126300, 2020</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.cej.2020.126300" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Anqi AE, Usta M, Krysko R, Lee JG, Ghaffour N, Oztekin A</p>
+      <p class="pub-title">Numerical study of desalination by vacuum membrane distillation &ndash; Transient three-dimensional analysis</p>
+      <p class="pub-venue">Journal of Membrane Science, 596, 117609, 2020</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.memsci.2019.117609" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Morabito MJ, Usta M, Cheng X, Zhang XF, Oztekin A, Webb EB III</p>
+      <p class="pub-title">Prediction of sub-monomer A2 domain dynamics of the von Willebrand factor by machine learning algorithm and coarse-grained molecular dynamics simulation</p>
+      <p class="pub-venue">Scientific Reports, 9(1), 9037, 2019</p>
+      <div class="pub-links"><a href="https://doi.org/10.1038/s41598-019-44044-2" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Morabito M, Anqi AE, Alrehili M, Hakim A, Oztekin A</p>
+      <p class="pub-title">Twisted hollow fiber membrane modules for reverse osmosis-driven desalination</p>
+      <p class="pub-venue">Desalination, 441, 21&ndash;34, 2018</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.desal.2018.04.027" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Morabito M, Alrehili M, Hakim A, Oztekin A</p>
+      <p class="pub-title">Steady three-dimensional flows past hollow fiber membrane arrays &ndash; cross flow arrangement</p>
+      <p class="pub-venue">Canadian Journal of Physics, 96(12), 1272&ndash;1287, 2018</p>
+      <div class="pub-links"><a href="https://doi.org/10.1139/cjp-2017-0914" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Anqi AE, Oztekin A</p>
+      <p class="pub-title">Reverse osmosis desalination modules containing corrugated membranes &ndash; Computational study</p>
+      <p class="pub-venue">Desalination, 416, 129&ndash;139, 2017</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.desal.2017.05.005" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Anqi AE, Alrehili M, Usta M, Oztekin A</p>
+      <p class="pub-title">Numerical analysis of hollow fiber membranes for desalination</p>
+      <p class="pub-venue">Desalination, 398, 39&ndash;51, 2016</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.desal.2016.07.019" target="_blank">DOI</a></div>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Alrehili M, Usta M, Alkhamis N, Anqi AE, Oztekin A</p>
+      <p class="pub-title">Flows past arrays of hollow fiber membranes &ndash; Gas separation</p>
+      <p class="pub-venue">International Journal of Heat and Mass Transfer, 97, 400&ndash;411, 2016</p>
+      <div class="pub-links"><a href="https://doi.org/10.1016/j.ijheatmasstransfer.2016.02.022" target="_blank">DOI</a></div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── CONFERENCE PRESENTATIONS ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Presentations</p>
+    <h2 class="section-title">Conference <em>Proceedings.</em></h2>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Oztekin DE, Usta M, Aidun CK</p>
+      <p class="pub-title">Novel analytic model of von Willebrand factor for predicting unfurling time in extensional flow</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2025</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Prince HA, Usta M, Daskiran C</p>
+      <p class="pub-title">A computational study of concentration polarization in novel centrifugal reverse osmosis module</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2025</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Samgar M, Daskiran C, Usta M</p>
+      <p class="pub-title">Annular flow between rotating porous discs with pressure-driven wall-normal permeation</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2025</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Daskiran C, Turkyilmaz A, Simonsen C, Usta M, Banerjee A</p>
+      <p class="pub-title">Impact of downstream Myring body on tidal turbine performance characteristics</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2025</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Samgar M, Daskiran C, Usta M</p>
+      <p class="pub-title">Characterizing flow and pressure dynamics of annulus flow between two rotating permeable discs</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2024</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Prince HA, Turkyilmaz A, Usta M, Daskiran C</p>
+      <p class="pub-title">Evaluation of drinkable water permeation through the membrane of a centrifugal reverse osmosis module</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2024</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Chengalrayan S, Usta M</p>
+      <p class="pub-title">Investigating von Willebrand factor and extracellular vesicle interactions under shear flow</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2024</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Turkyilmaz A, Prince HA, Usta M, Banerjee A, Daskiran C</p>
+      <p class="pub-title">Impact of downstream centrifugal reverse osmosis module on tidal turbine performance</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2024</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Pathikonda G, Khan I, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Mixing and laminarization characteristics of coaxial jets with disparate viscosity</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2023</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Oztekin DE, Usta M, Aidun CK</p>
+      <p class="pub-title">Conformation of vWF in converging/diverging channel</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2023</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Prince HA, Turkyilmaz A, Daskiran C, Usta M, Banerjee A</p>
+      <p class="pub-title">Near-wake interaction of a tidal turbine with an integrated downstream centrifugal reverse osmosis module</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2023</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Ahmad C, Roberts C, Rao R, Miers J, Halls B, Usta M, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Experimental investigation of fiber-foam rheology in advanced multiphase forming systems</p>
+      <p class="pub-venue">Society of Rheology 93rd Annual Meeting, Chicago, 2022</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Khan I, Usta M, Aidun CK, Ahmad MC, Zhang B, Pathikonda G, Ranjan D</p>
+      <p class="pub-title">The effect of mixing of miscible liquids with disparate viscosity in co-axial flow on chemical reactions</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2021</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Ahmad C, Pathikonda G, Zhang B, Khan I, Ranjan D, Aidun CK</p>
+      <p class="pub-title">The physics of mixing and relaminarization characteristics of a co-axial jet with disparate viscosity</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2021</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Pathikonda G, Ahmad C, Khan I, Ranjan D, Aidun CK</p>
+      <p class="pub-title">The physics of mixing and reaction of co-axial and cross-flow jets with disparate viscosity</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2020</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Falk K, Usta M, Advolodkina P, Aidun CK, Kelley R</p>
+      <p class="pub-title">Imaging bladder fluid dynamics using MRI</p>
+      <p class="pub-venue">Neurourology and Urodynamics, 39, S23&ndash;S24, 2020</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Pathikonda G, Ahmad C, Khan I, Ranjan D, Aidun CK</p>
+      <p class="pub-title">Competitive-consecutive reaction of liquids with disparate viscosity</p>
+      <p class="pub-venue">APS Division of Fluid Dynamics Annual Meeting, 2019</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Pathikonda G, Usta M, Ahmad C, Lee V, Khan I, Gillis P, Ranjan D, Aidun CK</p>
+      <p class="pub-title">The effect of viscosity on turbulent mixing in a co-flowing jet mixer</p>
+      <p class="pub-venue">11th International Symposium on Turbulence and Shear Flow Phenomena (TSFP11), 2019</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Falk K, Sawyer P, Usta M, Aidun CK, Oshinski J, Kelley R</p>
+      <p class="pub-title">Imaging bladder fluid dynamics using MRI</p>
+      <p class="pub-venue">AUGS/IUGA Joint Scientific Meeting, 2019</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Tosyali A</p>
+      <p class="pub-title">Characterization of model-based uncertainties in incompressible turbulent flows by machine learning</p>
+      <p class="pub-venue">ASME International Mechanical Engineering Congress and Exposition, 2018</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Krysko RM, Anqi AE, Alshwairekh AM, Oztekin A</p>
+      <p class="pub-title">The effect of PTFE membrane properties on vacuum membrane distillation module performance</p>
+      <p class="pub-venue">ASME International Mechanical Engineering Congress and Exposition, 2018</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M, Anqi AE, Morabito M, Hakim A, Alrehili M, Oztekin A</p>
+      <p class="pub-title">Computational study of reverse osmosis desalination process: hollow fiber module</p>
+      <p class="pub-venue">ASME International Mechanical Engineering Congress and Exposition, 2017</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Anqi AE, Usta M, Alrehili M, Alkhamis N, Oztekin A</p>
+      <p class="pub-title">Reverse osmosis desalination module: three dimensional, transient analyses</p>
+      <p class="pub-venue">ASME International Mechanical Engineering Congress and Exposition, 2016</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Alrehili M, Usta M, Alkhamis N, Anqi A, Oztekin A</p>
+      <p class="pub-title">Gas separation by using spiral wound membrane</p>
+      <p class="pub-venue">ASME International Mechanical Engineering Congress and Exposition, 2015</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── PATENT ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Intellectual Property</p>
+    <h2 class="section-title"><em>Patent.</em></h2>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Daskiran C, Usta M</p>
+      <p class="pub-title">Off-grid turbine-driven centrifugal reverse osmosis system, and applications thereof</p>
+      <p class="pub-venue">US Patent Application 18/900,088, 2025</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── THESES ── -->
+<section>
+  <div class="section-inner">
+    <p class="section-label">Dissertations</p>
+    <h2 class="section-title"><em>Theses.</em></h2>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M</p>
+      <p class="pub-title">Computational study of desalination by membranes</p>
+      <p class="pub-venue">Ph.D. Dissertation, Lehigh University, 2018</p>
+    </div>
+
+    <div class="pub-entry">
+      <p class="pub-authors">Usta M</p>
+      <p class="pub-title">Analysis of micromixers on reverse osmosis based desalination membranes</p>
+      <p class="pub-venue">M.S. Thesis, Lehigh University, 2017</p>
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  <div class="footer-csu">
+    <a href="https://www.csuohio.edu" target="_blank" rel="noopener">
+      <img src="media-pub/csu_logo.png" alt="Cleveland State University" />
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-dept">
+    <a href="https://engineering.csuohio.edu/mce" target="_blank" rel="noopener">
+      Department of Mechanical Engineering<br>Cleveland State University
+    </a>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-group">
+    <a href="index.html">
+      <img src="media-pub/logo.png" alt="Complex Flows and Advanced Transport Lab" />
+    </a>
+  </div>
+</footer>
+
+</body>
+</html>

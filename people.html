@@ -52,6 +52,26 @@
     nav a.active { color: var(--orange); }
     nav a.dim { color: var(--dim); }
 
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none; background: none; border: none; cursor: pointer;
+      flex-direction: column; gap: 5px; padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px; background: var(--accent);
+      transition: 0.2s;
+    }
+    @media (max-width: 700px) {
+      .nav-hamburger { display: flex; }
+      .nav-links {
+        display: none; position: absolute; top: 54px; left: 0; right: 0;
+        background: rgba(247,246,242,0.98); backdrop-filter: blur(10px);
+        flex-direction: column; padding: 1.5rem 7%; gap: 1.2rem;
+        border-bottom: 1px solid var(--rule);
+      }
+      .nav-links.open { display: flex; }
+    }
+
     /* ── PAGE HEADER ── */
     .page-header {
       padding: 7rem 7% 4rem;
@@ -282,6 +302,9 @@
     <a href="gallery.html">Gallery</a>
     <a href="join.html">Join</a>
   </div>
+  <button class="nav-hamburger" aria-label="Menu" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
 <div style="padding-top:54px; border-bottom:1px solid var(--rule);">
